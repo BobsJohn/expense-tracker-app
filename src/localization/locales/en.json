@@ -14,6 +14,7 @@
   },
   "navigation": {
     "dashboard": "Dashboard",
+    "reports": "Reports",
     "accounts": "Accounts",
     "budgets": "Budgets",
     "transactions": "Transactions",
@@ -27,6 +28,30 @@
     "recentTransactions": "Recent Transactions",
     "budgetOverview": "Budget Overview",
     "noTransactions": "No recent transactions"
+  },
+  "reports": {
+    "title": "Reports & Insights",
+    "filtersTitle": "Filter by Range",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "summaryTitle": "Summary",
+    "totalIncome": "Total Income",
+    "totalExpense": "Total Expense",
+    "netBalance": "Net Balance",
+    "topCategories": "Top Categories",
+    "incomeVsExpense": "Income vs Expense",
+    "spendingTrend": "Spending Trend",
+    "categoryDistribution": "Category Distribution",
+    "accountOverview": "Account Balance Overview",
+    "empty": "No data available for the selected filters.",
+    "drilldownTitle": "Details for {{label}}",
+    "clearDrilldown": "Clear",
+    "ranges": {
+      "daily": "Daily",
+      "weekly": "Weekly",
+      "monthly": "Monthly",
+      "yearly": "Yearly"
+    }
   },
   "accounts": {
     "title": "Accounts",
