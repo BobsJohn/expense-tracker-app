@@ -1,5 +1,5 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Transaction } from '@/types';
+import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {Transaction} from '@/types';
 
 interface TransactionsState {
   transactions: Transaction[];
@@ -66,12 +66,7 @@ const transactionsSlice = createSlice({
   },
 });
 
-export const {
-  setLoading,
-  setError,
-  addTransaction,
-  updateTransaction,
-  deleteTransaction,
-} = transactionsSlice.actions;
+export const {setLoading, setError, addTransaction, updateTransaction, deleteTransaction} =
+  transactionsSlice.actions;
 
 export default transactionsSlice.reducer;

@@ -1,5 +1,5 @@
-import exportService, { ExportOptions } from '@/services/exportService';
-import { Transaction, Budget, Account } from '@/types';
+import exportService, {ExportOptions} from '@/services/exportService';
+import {Transaction, Budget, Account} from '@/types';
 import RNFS from 'react-native-fs';
 import Share from 'react-native-share';
 
@@ -18,13 +18,13 @@ jest.mock('react-native-share', () => ({
 
 // Mock Papa Parse
 jest.mock('papaparse', () => ({
-  unparse: jest.fn((data) => 'mocked,csv,content'),
+  unparse: jest.fn(data => 'mocked,csv,content'),
 }));
 
 // Mock XLSX
 jest.mock('xlsx', () => ({
   utils: {
-    book_new: jest.fn(() => ({ Props: {} })),
+    book_new: jest.fn(() => ({Props: {}})),
     json_to_sheet: jest.fn(() => ({})),
     aoa_to_sheet: jest.fn(() => ({})),
     book_append_sheet: jest.fn(),
@@ -120,7 +120,7 @@ describe('ExportService', () => {
         mockTransactions,
         mockBudgets,
         mockAccounts,
-        options
+        options,
       );
 
       expect(result.success).toBe(true);
@@ -129,7 +129,7 @@ describe('ExportService', () => {
       expect(RNFS.writeFile).toHaveBeenCalledWith(
         expect.stringContaining('.csv'),
         expect.stringContaining('mocked,csv,content'),
-        'utf8'
+        'utf8',
       );
     });
 
@@ -148,7 +148,7 @@ describe('ExportService', () => {
         mockTransactions,
         mockBudgets,
         mockAccounts,
-        options
+        options,
       );
 
       expect(result.success).toBe(true);
@@ -157,7 +157,7 @@ describe('ExportService', () => {
       expect(RNFS.writeFile).toHaveBeenCalledWith(
         expect.stringContaining('.xlsx'),
         'mocked-binary-content',
-        'ascii'
+        'ascii',
       );
     });
 
@@ -176,7 +176,7 @@ describe('ExportService', () => {
         mockTransactions,
         mockBudgets,
         mockAccounts,
-        options
+        options,
       );
 
       expect(result.success).toBe(true);
@@ -200,7 +200,7 @@ describe('ExportService', () => {
         mockTransactions,
         mockBudgets,
         mockAccounts,
-        options
+        options,
       );
 
       expect(result.success).toBe(true);
@@ -223,7 +223,7 @@ describe('ExportService', () => {
         mockTransactions,
         mockBudgets,
         mockAccounts,
-        options
+        options,
       );
 
       expect(result.success).toBe(true);
@@ -245,7 +245,7 @@ describe('ExportService', () => {
         mockTransactions,
         mockBudgets,
         mockAccounts,
-        options
+        options,
       );
 
       expect(result.success).toBe(true);
@@ -268,7 +268,7 @@ describe('ExportService', () => {
         mockTransactions,
         mockBudgets,
         mockAccounts,
-        options
+        options,
       );
 
       expect(result.success).toBe(false);
@@ -322,7 +322,7 @@ describe('ExportService', () => {
 
   describe('cleanupTempFiles', () => {
     it('should cleanup old export files', async () => {
-      const mockFiles = Array.from({ length: 8 }, (_, i) => ({
+      const mockFiles = Array.from({length: 8}, (_, i) => ({
         name: `financial_export_2024-01-${String(i + 1).padStart(2, '0')}.csv`,
         path: `/mock/documents/financial_export_2024-01-${String(i + 1).padStart(2, '0')}.csv`,
         mtime: new Date(`2024-01-${String(i + 1).padStart(2, '0')}`),
@@ -418,7 +418,7 @@ describe('ExportService', () => {
         mockTransactions,
         mockBudgets,
         mockAccounts,
-        options
+        options,
       );
 
       expect(result.success).toBe(true);
@@ -441,7 +441,7 @@ describe('ExportService', () => {
         mockTransactions,
         mockBudgets,
         mockAccounts,
-        options
+        options,
       );
 
       expect(result.success).toBe(true);

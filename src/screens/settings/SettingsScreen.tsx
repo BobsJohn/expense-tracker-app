@@ -1,16 +1,10 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-} from 'react-native';
-import { useTranslation } from 'react-i18next';
-import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
+import {View, Text, StyleSheet, ScrollView, TouchableOpacity} from 'react-native';
+import {useTranslation} from 'react-i18next';
+import {useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
 
-import { RootStackParamList } from '@/types';
+import {RootStackParamList} from '@/types';
 import Card from '@/components/ui/Card';
 
 type SettingsScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Settings'>;
@@ -23,7 +17,7 @@ interface SettingItem {
 }
 
 const SettingsScreen: React.FC = () => {
-  const { t } = useTranslation();
+  const {t} = useTranslation();
   const navigation = useNavigation<SettingsScreenNavigationProp>();
 
   const settingsItems: SettingItem[] = [
@@ -70,12 +64,9 @@ const SettingsScreen: React.FC = () => {
       key={item.key}
       style={styles.settingItem}
       onPress={item.onPress}
-      disabled={!item.onPress}
-    >
+      disabled={!item.onPress}>
       <Text style={styles.settingItemTitle}>{item.title}</Text>
-      {item.showArrow && (
-        <Text style={styles.arrow}>›</Text>
-      )}
+      {item.showArrow && <Text style={styles.arrow}>›</Text>}
     </TouchableOpacity>
   );
 
@@ -83,7 +74,7 @@ const SettingsScreen: React.FC = () => {
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.contentContainer}>
         <Text style={styles.title}>{t('settings.title')}</Text>
-        
+
         <Card style={styles.settingsCard}>
           {settingsItems.map((item, index) => (
             <View key={item.key}>

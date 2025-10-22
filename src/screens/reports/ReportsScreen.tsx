@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {
   View,
   Text,
@@ -8,8 +8,8 @@ import {
   Platform,
   FlatList,
 } from 'react-native';
-import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
-import { useTranslation } from 'react-i18next';
+import DateTimePicker, {DateTimePickerEvent} from '@react-native-community/datetimepicker';
+import {useTranslation} from 'react-i18next';
 import {
   VictoryArea,
   VictoryAxis,
@@ -25,8 +25,8 @@ import {
 
 import Card from '@/components/ui/Card';
 import LoadingSpinner from '@/components/common/LoadingSpinner';
-import { useAppSelector } from '@/hooks/useAppSelector';
-import { formatCurrency, formatNumber } from '@/utils/currency';
+import {useAppSelector} from '@/hooks/useAppSelector';
+import {formatCurrency, formatNumber} from '@/utils/currency';
 import {
   AccountReportDatum,
   CategoryReportDatum,
@@ -46,9 +46,9 @@ import {
 const timeRanges: TimeGranularity[] = ['daily', 'weekly', 'monthly', 'yearly'];
 
 type DrilldownState =
-  | { type: 'period' | 'trend'; label: string; transactions: Transaction[] }
-  | { type: 'category'; label: string; transactions: Transaction[] }
-  | { type: 'account'; label: string; transactions: Transaction[] }
+  | {type: 'period' | 'trend'; label: string; transactions: Transaction[]}
+  | {type: 'category'; label: string; transactions: Transaction[]}
+  | {type: 'account'; label: string; transactions: Transaction[]}
   | null;
 
 const startOfDay = (date: Date): Date => {
@@ -60,7 +60,7 @@ const startOfDay = (date: Date): Date => {
 const rangeForGranularity = (
   granularity: TimeGranularity,
   referenceDate: Date = new Date(),
-): { startDate: Date; endDate: Date } => {
+): {startDate: Date; endDate: Date} => {
   const reference = startOfDay(referenceDate);
   let startDate = startOfDay(reference);
   let endDate = startOfDay(reference);
@@ -102,10 +102,10 @@ const ensureValidRange = (start: Date, end: Date) => {
   const normalizedEnd = startOfDay(end);
 
   if (normalizedStart > normalizedEnd) {
-    return { startDate: normalizedStart, endDate: normalizedStart };
+    return {startDate: normalizedStart, endDate: normalizedStart};
   }
 
-  return { startDate: normalizedStart, endDate: normalizedEnd };
+  return {startDate: normalizedStart, endDate: normalizedEnd};
 };
 
 const formatDateDisplay = (date: Date) =>
@@ -116,10 +116,10 @@ const formatDateDisplay = (date: Date) =>
   });
 
 const ReportsScreen: React.FC = () => {
-  const { t } = useTranslation();
+  const {t} = useTranslation();
 
   const [filters, setFilters] = useState<ReportFilters>(() => {
-    const { startDate, endDate } = rangeForGranularity('monthly');
+    const {startDate, endDate} = rangeForGranularity('monthly');
     return {
       granularity: 'monthly',
       startDate,
@@ -131,15 +131,15 @@ const ReportsScreen: React.FC = () => {
   const [drilldown, setDrilldown] = useState<DrilldownState>(null);
 
   const isLoading = useAppSelector(selectIsLoading);
-  const incomeExpenseByPeriod = useAppSelector((state) =>
+  const incomeExpenseByPeriod = useAppSelector(state =>
     selectIncomeExpenseByPeriod(state, filters),
   );
-  const spendingTrend = useAppSelector((state) => selectSpendingTrendReport(state, filters));
-  const categoryDistribution = useAppSelector((state) =>
+  const spendingTrend = useAppSelector(state => selectSpendingTrendReport(state, filters));
+  const categoryDistribution = useAppSelector(state =>
     selectCategoryDistributionReport(state, filters),
   );
-  const accountReports = useAppSelector((state) => selectAccountReports(state, filters));
-  const summary = useAppSelector((state) => selectReportSummary(state, filters));
+  const accountReports = useAppSelector(state => selectAccountReports(state, filters));
+  const summary = useAppSelector(state => selectReportSummary(state, filters));
 
   const hasChartData =
     incomeExpenseByPeriod.length > 0 ||
@@ -155,13 +155,13 @@ const ReportsScreen: React.FC = () => {
     const stillValid = (() => {
       switch (drilldown.type) {
         case 'period':
-          return incomeExpenseByPeriod.some((item) => item.label === drilldown.label);
+          return incomeExpenseByPeriod.some(item => item.label === drilldown.label);
         case 'trend':
-          return spendingTrend.some((item) => item.label === drilldown.label);
+          return spendingTrend.some(item => item.label === drilldown.label);
         case 'category':
-          return categoryDistribution.some((item) => item.category === drilldown.label);
+          return categoryDistribution.some(item => item.category === drilldown.label);
         case 'account':
-          return accountReports.some((item) => item.accountName === drilldown.label);
+          return accountReports.some(item => item.accountName === drilldown.label);
         default:
           return false;
       }
@@ -170,17 +170,11 @@ const ReportsScreen: React.FC = () => {
     if (!stillValid) {
       setDrilldown(null);
     }
-  }, [
-    drilldown,
-    incomeExpenseByPeriod,
-    spendingTrend,
-    categoryDistribution,
-    accountReports,
-  ]);
+  }, [drilldown, incomeExpenseByPeriod, spendingTrend, categoryDistribution, accountReports]);
 
   const incomeSeries = useMemo(
     () =>
-      incomeExpenseByPeriod.map((period) => ({
+      incomeExpenseByPeriod.map(period => ({
         x: period.label,
         y: period.income,
         periodKey: period.periodKey,
@@ -190,7 +184,7 @@ const ReportsScreen: React.FC = () => {
 
   const expenseSeries = useMemo(
     () =>
-      incomeExpenseByPeriod.map((period) => ({
+      incomeExpenseByPeriod.map(period => ({
         x: period.label,
         y: period.expense,
         periodKey: period.periodKey,
@@ -200,7 +194,7 @@ const ReportsScreen: React.FC = () => {
 
   const trendSeries = useMemo(
     () =>
-      spendingTrend.map((period) => ({
+      spendingTrend.map(period => ({
         x: period.label,
         y: period.value,
         periodKey: period.periodKey,
@@ -210,7 +204,7 @@ const ReportsScreen: React.FC = () => {
 
   const categorySeries = useMemo(
     () =>
-      categoryDistribution.map((category) => ({
+      categoryDistribution.map(category => ({
         x: category.category,
         y: category.total,
         label: `${category.category}\n${formatNumber(category.total)}`,
@@ -220,7 +214,7 @@ const ReportsScreen: React.FC = () => {
 
   const accountSeries = useMemo(
     () =>
-      accountReports.map((account) => ({
+      accountReports.map(account => ({
         x: account.accountName,
         y: account.balance,
         accountId: account.accountId,
@@ -242,12 +236,12 @@ const ReportsScreen: React.FC = () => {
   );
 
   const handleGranularityChange = (granularity: TimeGranularity) => {
-    setFilters((prev) => {
+    setFilters(prev => {
       if (prev.granularity === granularity) {
         return prev;
       }
 
-      const { startDate, endDate } = rangeForGranularity(granularity, prev.endDate);
+      const {startDate, endDate} = rangeForGranularity(granularity, prev.endDate);
       return {
         granularity,
         startDate,
@@ -268,8 +262,8 @@ const ReportsScreen: React.FC = () => {
 
     const normalized = startOfDay(selected);
 
-    setFilters((prev) => {
-      const { startDate, endDate } = ensureValidRange(normalized, prev.endDate);
+    setFilters(prev => {
+      const {startDate, endDate} = ensureValidRange(normalized, prev.endDate);
       return {
         ...prev,
         startDate,
@@ -289,8 +283,8 @@ const ReportsScreen: React.FC = () => {
 
     const normalized = startOfDay(selected);
 
-    setFilters((prev) => {
-      const { startDate, endDate } = ensureValidRange(prev.startDate, normalized);
+    setFilters(prev => {
+      const {startDate, endDate} = ensureValidRange(prev.startDate, normalized);
       return {
         ...prev,
         startDate,
@@ -301,7 +295,7 @@ const ReportsScreen: React.FC = () => {
 
   const handlePeriodSelect = (periodKey: string, type: 'period' | 'trend') => {
     if (type === 'period') {
-      const match = incomeExpenseByPeriod.find((item) => item.periodKey === periodKey);
+      const match = incomeExpenseByPeriod.find(item => item.periodKey === periodKey);
       if (match) {
         setDrilldown({
           type,
@@ -312,7 +306,7 @@ const ReportsScreen: React.FC = () => {
       return;
     }
 
-    const match = spendingTrend.find((item) => item.periodKey === periodKey);
+    const match = spendingTrend.find(item => item.periodKey === periodKey);
     if (match) {
       setDrilldown({
         type,
@@ -338,7 +332,7 @@ const ReportsScreen: React.FC = () => {
     });
   };
 
-  const renderTransaction = ({ item }: { item: Transaction }) => (
+  const renderTransaction = ({item}: {item: Transaction}) => (
     <View style={styles.transactionItem}>
       <View style={styles.transactionInfo}>
         <Text style={styles.transactionDescription}>{item.description}</Text>
@@ -348,8 +342,7 @@ const ReportsScreen: React.FC = () => {
         style={[
           styles.transactionAmount,
           item.type === 'income' ? styles.incomeText : styles.expenseText,
-        ]}
-      >
+        ]}>
         {item.type === 'income' ? '+' : '-'}
         {formatCurrency(Math.abs(item.amount))}
       </Text>
@@ -367,21 +360,19 @@ const ReportsScreen: React.FC = () => {
       <Card>
         <Text style={styles.sectionTitle}>{t('reports.filtersTitle')}</Text>
         <View style={styles.rangeSelector}>
-          {timeRanges.map((range) => (
+          {timeRanges.map(range => (
             <TouchableOpacity
               key={range}
               style={[
                 styles.rangeButton,
                 filters.granularity === range && styles.activeRangeButton,
               ]}
-              onPress={() => handleGranularityChange(range)}
-            >
+              onPress={() => handleGranularityChange(range)}>
               <Text
                 style={[
                   styles.rangeButtonText,
                   filters.granularity === range && styles.activeRangeButtonText,
-                ]}
-              >
+                ]}>
                 {t(`reports.ranges.${range}`)}
               </Text>
             </TouchableOpacity>
@@ -393,8 +384,7 @@ const ReportsScreen: React.FC = () => {
             <Text style={styles.filterLabel}>{t('reports.startDate')}</Text>
             <TouchableOpacity
               style={styles.dateButton}
-              onPress={() => setShowStartPicker((prev) => !prev)}
-            >
+              onPress={() => setShowStartPicker(prev => !prev)}>
               <Text style={styles.dateButtonText}>{formatDateDisplay(filters.startDate)}</Text>
             </TouchableOpacity>
             {showStartPicker && (
@@ -411,8 +401,7 @@ const ReportsScreen: React.FC = () => {
             <Text style={styles.filterLabel}>{t('reports.endDate')}</Text>
             <TouchableOpacity
               style={styles.dateButton}
-              onPress={() => setShowEndPicker((prev) => !prev)}
-            >
+              onPress={() => setShowEndPicker(prev => !prev)}>
               <Text style={styles.dateButtonText}>{formatDateDisplay(filters.endDate)}</Text>
             </TouchableOpacity>
             {showEndPicker && (
@@ -449,8 +438,7 @@ const ReportsScreen: React.FC = () => {
               style={[
                 styles.summaryValue,
                 summary.netBalance >= 0 ? styles.incomeText : styles.expenseText,
-              ]}
-            >
+              ]}>
               {formatCurrency(summary.netBalance)}
             </Text>
           </View>
@@ -458,7 +446,7 @@ const ReportsScreen: React.FC = () => {
         <View style={styles.topCategories}>
           <Text style={styles.filterLabel}>{t('reports.topCategories')}</Text>
           {summary.topCategories.length > 0 ? (
-            summary.topCategories.map((category) => (
+            summary.topCategories.map(category => (
               <View key={category.category} style={styles.categoryRow}>
                 <Text style={styles.categoryName}>{category.category}</Text>
                 <Text style={styles.categoryAmount}>{formatCurrency(category.total)}</Text>
@@ -475,14 +463,10 @@ const ReportsScreen: React.FC = () => {
           <Text style={styles.sectionTitle}>{t('reports.incomeVsExpense')}</Text>
         </View>
         {incomeExpenseByPeriod.length > 0 ? (
-          <VictoryChart theme={VictoryTheme.material} domainPadding={{ x: 30, y: 20 }}>
-            <VictoryAxis style={axisStyles} tickFormat={(tick) => `${tick}`} />
-            <VictoryAxis
-              dependentAxis
-              style={axisStyles}
-              tickFormat={(tick) => formatNumber(tick)}
-            />
-            <VictoryStack colorScale={["#34C759", "#FF3B30"]}>
+          <VictoryChart theme={VictoryTheme.material} domainPadding={{x: 30, y: 20}}>
+            <VictoryAxis style={axisStyles} tickFormat={tick => `${tick}`} />
+            <VictoryAxis dependentAxis style={axisStyles} tickFormat={tick => formatNumber(tick)} />
+            <VictoryStack colorScale={['#34C759', '#FF3B30']}>
               <VictoryBar
                 data={incomeSeries}
                 barWidth={16}
@@ -525,21 +509,14 @@ const ReportsScreen: React.FC = () => {
           <Text style={styles.sectionTitle}>{t('reports.spendingTrend')}</Text>
         </View>
         {trendSeries.length > 0 ? (
-          <VictoryChart theme={VictoryTheme.material} domainPadding={{ x: 25, y: 20 }}>
-            <VictoryAxis style={axisStyles} tickFormat={(tick) => `${tick}`} />
-            <VictoryAxis
-              dependentAxis
-              style={axisStyles}
-              tickFormat={(tick) => formatNumber(tick)}
-            />
-            <VictoryLine
-              data={trendSeries}
-              style={{ data: { stroke: '#5856D6', strokeWidth: 2 } }}
-            />
+          <VictoryChart theme={VictoryTheme.material} domainPadding={{x: 25, y: 20}}>
+            <VictoryAxis style={axisStyles} tickFormat={tick => `${tick}`} />
+            <VictoryAxis dependentAxis style={axisStyles} tickFormat={tick => formatNumber(tick)} />
+            <VictoryLine data={trendSeries} style={{data: {stroke: '#5856D6', strokeWidth: 2}}} />
             <VictoryScatter
               data={trendSeries}
               size={5}
-              style={{ data: { fill: '#5856D6' } }}
+              style={{data: {fill: '#5856D6'}}}
               events={[
                 {
                   target: 'data',
@@ -567,8 +544,8 @@ const ReportsScreen: React.FC = () => {
             data={categorySeries}
             innerRadius={60}
             padAngle={2}
-            labels={({ datum }) => datum.label}
-            labelRadius={({ radius }) => radius - 30}
+            labels={({datum}) => datum.label}
+            labelRadius={({radius}) => radius - 30}
             colorScale={['#007AFF', '#FF9500', '#34C759', '#FF3B30', '#5856D6', '#5AC8FA']}
             style={{
               labels: {
@@ -604,24 +581,19 @@ const ReportsScreen: React.FC = () => {
         {accountSeries.length > 0 ? (
           <VictoryChart
             theme={VictoryTheme.material}
-            domainPadding={{ x: 25, y: 20 }}
-            categories={{ x: accountSeries.map((item) => item.x) }}
-          >
+            domainPadding={{x: 25, y: 20}}
+            categories={{x: accountSeries.map(item => item.x)}}>
             <VictoryAxis style={accountAxisStyle} />
-            <VictoryAxis
-              dependentAxis
-              style={axisStyles}
-              tickFormat={(tick) => formatNumber(tick)}
-            />
+            <VictoryAxis dependentAxis style={axisStyles} tickFormat={tick => formatNumber(tick)} />
             <VictoryGroup>
               <VictoryArea
                 data={accountSeries}
-                style={{ data: { fill: 'rgba(52, 199, 89, 0.2)', stroke: '#34C759' } }}
+                style={{data: {fill: 'rgba(52, 199, 89, 0.2)', stroke: '#34C759'}}}
               />
               <VictoryBar
                 data={accountSeries}
                 barWidth={18}
-                style={{ data: { fill: '#34C759' } }}
+                style={{data: {fill: '#34C759'}}}
                 events={[
                   {
                     target: 'data',
@@ -648,7 +620,7 @@ const ReportsScreen: React.FC = () => {
         <Card style={styles.lastCard}>
           <View style={styles.cardHeader}>
             <Text style={styles.sectionTitle}>
-              {t('reports.drilldownTitle', { label: drilldown.label })}
+              {t('reports.drilldownTitle', {label: drilldown.label})}
             </Text>
             <TouchableOpacity onPress={() => setDrilldown(null)}>
               <Text style={styles.clearText}>{t('reports.clearDrilldown')}</Text>
@@ -658,7 +630,7 @@ const ReportsScreen: React.FC = () => {
             <FlatList
               data={drilldown.transactions}
               renderItem={renderTransaction}
-              keyExtractor={(item) => item.id}
+              keyExtractor={item => item.id}
               scrollEnabled={false}
             />
           ) : (
@@ -667,21 +639,19 @@ const ReportsScreen: React.FC = () => {
         </Card>
       )}
 
-      {!hasChartData && (
-        <Text style={styles.emptyTextCentered}>{t('reports.empty')}</Text>
-      )}
+      {!hasChartData && <Text style={styles.emptyTextCentered}>{t('reports.empty')}</Text>}
     </ScrollView>
   );
 };
 
 const axisStyles = {
-  axis: { stroke: '#E5E5EA' },
+  axis: {stroke: '#E5E5EA'},
   tickLabels: {
     fill: '#3A3A3C',
     fontSize: 12,
     padding: 6,
   },
-  grid: { stroke: '#E5E5EA', strokeDasharray: '4,4' },
+  grid: {stroke: '#E5E5EA', strokeDasharray: '4,4'},
 };
 
 const styles = StyleSheet.create({

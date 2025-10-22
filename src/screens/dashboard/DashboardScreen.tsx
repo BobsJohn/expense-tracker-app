@@ -1,7 +1,7 @@
-import React, { useMemo } from 'react';
-import { View, Text, StyleSheet, ScrollView, FlatList } from 'react-native';
-import { useTranslation } from 'react-i18next';
-import { useAppSelector } from '@/hooks/useAppSelector';
+import React, {useMemo} from 'react';
+import {View, Text, StyleSheet, ScrollView, FlatList} from 'react-native';
+import {useTranslation} from 'react-i18next';
+import {useAppSelector} from '@/hooks/useAppSelector';
 import {
   selectTotalBalance,
   selectMonthlyIncome,
@@ -11,66 +11,65 @@ import {
 } from '@/store/selectors';
 import Card from '@/components/ui/Card';
 import LoadingSpinner from '@/components/common/LoadingSpinner';
-import { formatCurrency } from '@/utils/currency';
-import { Transaction, Budget } from '@/types';
+import {formatCurrency} from '@/utils/currency';
+import {Transaction, Budget} from '@/types';
 
 const DashboardScreen: React.FC = () => {
-  const { t } = useTranslation();
-  
+  const {t} = useTranslation();
+
   const totalBalance = useAppSelector(selectTotalBalance);
   const monthlyIncome = useAppSelector(selectMonthlyIncome);
   const monthlyExpenses = useAppSelector(selectMonthlyExpenses);
   const recentTransactions = useAppSelector(selectRecentTransactions);
   const budgetProgress = useAppSelector(selectBudgetProgress);
-  const isLoading = useAppSelector(state => 
-    state.accounts.loading || state.transactions.loading || state.budgets.loading
+  const isLoading = useAppSelector(
+    state => state.accounts.loading || state.transactions.loading || state.budgets.loading,
   );
 
-  const limitedTransactions = useMemo(() => 
-    recentTransactions.slice(0, 5), [recentTransactions]
-  );
+  const limitedTransactions = useMemo(() => recentTransactions.slice(0, 5), [recentTransactions]);
 
-  const limitedBudgets = useMemo(() => 
-    budgetProgress.slice(0, 3), [budgetProgress]
-  );
+  const limitedBudgets = useMemo(() => budgetProgress.slice(0, 3), [budgetProgress]);
 
   if (isLoading) {
     return <LoadingSpinner />;
   }
 
-  const renderTransaction = ({ item }: { item: Transaction }) => (
+  const renderTransaction = ({item}: {item: Transaction}) => (
     <View style={styles.transactionItem}>
       <View style={styles.transactionInfo}>
         <Text style={styles.transactionDescription}>{item.description}</Text>
         <Text style={styles.transactionCategory}>{item.category}</Text>
       </View>
-      <Text style={[
-        styles.transactionAmount,
-        item.type === 'income' ? styles.incomeAmount : styles.expenseAmount
-      ]}>
-        {item.type === 'income' ? '+' : '-'}{formatCurrency(Math.abs(item.amount))}
+      <Text
+        style={[
+          styles.transactionAmount,
+          item.type === 'income' ? styles.incomeAmount : styles.expenseAmount,
+        ]}>
+        {item.type === 'income' ? '+' : '-'}
+        {formatCurrency(Math.abs(item.amount))}
       </Text>
     </View>
   );
 
-  const renderBudget = ({ item }: { item: Budget & { progressPercentage: number; isOverBudget: boolean } }) => (
+  const renderBudget = ({
+    item,
+  }: {
+    item: Budget & {progressPercentage: number; isOverBudget: boolean};
+  }) => (
     <View style={styles.budgetItem}>
       <View style={styles.budgetHeader}>
         <Text style={styles.budgetCategory}>{item.category}</Text>
-        <Text style={[
-          styles.budgetPercentage,
-          item.isOverBudget && styles.overBudgetText
-        ]}>
+        <Text style={[styles.budgetPercentage, item.isOverBudget && styles.overBudgetText]}>
           {Math.round(item.progressPercentage)}%
         </Text>
       </View>
       <View style={styles.progressBar}>
-        <View 
+        <View
           style={[
             styles.progressFill,
-            { width: `${Math.min(item.progressPercentage, 100)}%` },
-            item.isOverBudget && styles.overBudgetBar
-          ]} 
+            {width: `${Math.min(item.progressPercentage, 100)}%`},
+            item.isOverBudget && styles.overBudgetBar,
+          ]}
         />
       </View>
       <Text style={styles.budgetAmount}>
@@ -82,7 +81,7 @@ const DashboardScreen: React.FC = () => {
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.title}>{t('dashboard.title')}</Text>
-      
+
       {/* Balance Overview */}
       <Card>
         <View style={styles.balanceContainer}>
@@ -117,7 +116,7 @@ const DashboardScreen: React.FC = () => {
           <FlatList
             data={limitedTransactions}
             renderItem={renderTransaction}
-            keyExtractor={(item) => item.id}
+            keyExtractor={item => item.id}
             scrollEnabled={false}
             showsVerticalScrollIndicator={false}
           />
@@ -133,7 +132,7 @@ const DashboardScreen: React.FC = () => {
           <FlatList
             data={limitedBudgets}
             renderItem={renderBudget}
-            keyExtractor={(item) => item.id}
+            keyExtractor={item => item.id}
             scrollEnabled={false}
             showsVerticalScrollIndicator={false}
           />

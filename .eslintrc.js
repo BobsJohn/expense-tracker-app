@@ -16,7 +16,7 @@ module.exports = {
     'react-native/no-inline-styles': 'warn',
     'react-native/no-color-literals': 'warn',
     'react-native/no-raw-text': 'off',
-    '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+    '@typescript-eslint/no-unused-vars': ['error', {argsIgnorePattern: '^_'}],
     'react-hooks/exhaustive-deps': 'warn',
   },
 };

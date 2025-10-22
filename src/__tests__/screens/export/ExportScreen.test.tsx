@@ -1,9 +1,9 @@
 import React from 'react';
-import { render, fireEvent, waitFor } from '@testing-library/react-native';
-import { Provider } from 'react-redux';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import { configureStore } from '@reduxjs/toolkit';
+import {render, fireEvent, waitFor} from '@testing-library/react-native';
+import {Provider} from 'react-redux';
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
+import {configureStore} from '@reduxjs/toolkit';
 
 import ExportScreen from '@/screens/export/ExportScreen';
 import accountsSlice from '@/store/slices/accountsSlice';
@@ -119,7 +119,7 @@ describe('ExportScreen', () => {
   });
 
   it('renders correctly with all sections', () => {
-    const { getByText } = render(<TestComponent />);
+    const {getByText} = render(<TestComponent />);
 
     expect(getByText('Export Format')).toBeTruthy();
     expect(getByText('CSV')).toBeTruthy();
@@ -131,25 +131,25 @@ describe('ExportScreen', () => {
   });
 
   it('allows switching between CSV and XLSX formats', () => {
-    const { getByText } = render(<TestComponent />);
+    const {getByText} = render(<TestComponent />);
 
     const csvButton = getByText('CSV');
     const xlsxButton = getByText('Excel (XLSX)');
 
     // CSV should be selected by default
     expect(csvButton.parent?.props.style).toContainEqual(
-      expect.objectContaining({ backgroundColor: '#007AFF' })
+      expect.objectContaining({backgroundColor: '#007AFF'}),
     );
 
     // Switch to XLSX
     fireEvent.press(xlsxButton);
     expect(xlsxButton.parent?.props.style).toContainEqual(
-      expect.objectContaining({ backgroundColor: '#007AFF' })
+      expect.objectContaining({backgroundColor: '#007AFF'}),
     );
   });
 
   it('allows toggling data type switches', () => {
-    const { getByText } = render(<TestComponent />);
+    const {getByText} = render(<TestComponent />);
 
     // Find the switches by their labels
     const transactionsSwitch = getByText('Include Transactions').parent?.parent?.children[1];
@@ -164,7 +164,7 @@ describe('ExportScreen', () => {
   });
 
   it('shows account selection when accounts are available', () => {
-    const { getByText } = render(<TestComponent />);
+    const {getByText} = render(<TestComponent />);
 
     expect(getByText('Accounts')).toBeTruthy();
     expect(getByText('Checking Account')).toBeTruthy();
@@ -173,7 +173,7 @@ describe('ExportScreen', () => {
   });
 
   it('shows category selection when categories are available', () => {
-    const { getByText } = render(<TestComponent />);
+    const {getByText} = render(<TestComponent />);
 
     expect(getByText('Categories')).toBeTruthy();
     expect(getByText('Food')).toBeTruthy();
@@ -181,7 +181,7 @@ describe('ExportScreen', () => {
   });
 
   it('handles account selection correctly', () => {
-    const { getByText } = render(<TestComponent />);
+    const {getByText} = render(<TestComponent />);
 
     const checkingAccountRow = getByText('Checking Account').parent;
     const selectAllButton = getByText('Select All');
@@ -199,7 +199,7 @@ describe('ExportScreen', () => {
   });
 
   it('handles category selection correctly', () => {
-    const { getByText } = render(<TestComponent />);
+    const {getByText} = render(<TestComponent />);
 
     const foodCategoryRow = getByText('Food').parent;
     const selectAllButton = getByText('Categories').parent?.children[0].children[1];
@@ -218,7 +218,7 @@ describe('ExportScreen', () => {
     });
     (exportService.cleanupTempFiles as jest.Mock).mockResolvedValue(undefined);
 
-    const { getByText } = render(<TestComponent />);
+    const {getByText} = render(<TestComponent />);
 
     const exportButton = getByText('Export Data');
     fireEvent.press(exportButton);
@@ -232,7 +232,7 @@ describe('ExportScreen', () => {
           format: 'csv',
           includeTransactions: true,
           includeBudgets: true,
-        })
+        }),
       );
     });
   });
@@ -243,7 +243,7 @@ describe('ExportScreen', () => {
       error: 'Export failed',
     });
 
-    const { getByText } = render(<TestComponent />);
+    const {getByText} = render(<TestComponent />);
 
     const exportButton = getByText('Export Data');
     fireEvent.press(exportButton);
@@ -255,10 +255,10 @@ describe('ExportScreen', () => {
 
   it('shows loading state during export', async () => {
     (exportService.exportData as jest.Mock).mockImplementation(
-      () => new Promise(resolve => setTimeout(() => resolve({ success: true }), 100))
+      () => new Promise(resolve => setTimeout(() => resolve({success: true}), 100)),
     );
 
-    const { getByText } = render(<TestComponent />);
+    const {getByText} = render(<TestComponent />);
 
     const exportButton = getByText('Export Data');
     fireEvent.press(exportButton);
@@ -271,7 +271,7 @@ describe('ExportScreen', () => {
   });
 
   it('prevents export when no data types are selected', () => {
-    const { getByText } = render(<TestComponent />);
+    const {getByText} = render(<TestComponent />);
 
     // Disable both data types
     const transactionsSwitch = getByText('Include Transactions').parent?.parent?.children[1];
@@ -305,7 +305,7 @@ describe('ExportScreen', () => {
       }
     });
 
-    const { getByText } = render(<TestComponent />);
+    const {getByText} = render(<TestComponent />);
 
     const exportButton = getByText('Export Data');
     fireEvent.press(exportButton);
@@ -314,7 +314,7 @@ describe('ExportScreen', () => {
       expect(exportService.exportData).toHaveBeenCalled();
       expect(exportService.shareFile).toHaveBeenCalledWith(
         '/path/to/export.csv',
-        'Financial Data Export'
+        'Financial Data Export',
       );
       expect(exportService.cleanupTempFiles).toHaveBeenCalled();
     });

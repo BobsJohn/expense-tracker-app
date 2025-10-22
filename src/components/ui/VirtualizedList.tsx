@@ -1,7 +1,7 @@
-import React, { useMemo } from 'react';
-import { FlatList, FlatListProps, Dimensions } from 'react-native';
+import React, {useMemo} from 'react';
+import {FlatList, FlatListProps, Dimensions} from 'react-native';
 
-const { height: screenHeight } = Dimensions.get('window');
+const {height: screenHeight} = Dimensions.get('window');
 
 interface VirtualizedListProps<T> extends Omit<FlatListProps<T>, 'getItemLayout'> {
   data: T[];
@@ -16,8 +16,10 @@ const VirtualizedList = <T,>({
   ...props
 }: VirtualizedListProps<T>) => {
   const getItemLayout = useMemo(() => {
-    if (!itemHeight) return undefined;
-    
+    if (!itemHeight) {
+      return undefined;
+    }
+
     return (data: T[] | null | undefined, index: number) => ({
       length: itemHeight,
       offset: itemHeight * index,

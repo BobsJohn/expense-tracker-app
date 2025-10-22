@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 interface AppState {
   isLoading: boolean;
@@ -24,7 +24,7 @@ const appSlice = createSlice({
     setError: (state, action: PayloadAction<string | null>) => {
       state.error = action.payload;
     },
-    clearError: (state) => {
+    clearError: state => {
       state.error = null;
     },
     setTheme: (state, action: PayloadAction<'light' | 'dark'>) => {
@@ -36,12 +36,6 @@ const appSlice = createSlice({
   },
 });
 
-export const {
-  setLoading,
-  setError,
-  clearError,
-  setTheme,
-  setLanguage,
-} = appSlice.actions;
+export const {setLoading, setError, clearError, setTheme, setLanguage} = appSlice.actions;
 
 export default appSlice.reducer;

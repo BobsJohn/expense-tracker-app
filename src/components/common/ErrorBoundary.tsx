@@ -1,5 +1,5 @@
-import React, { Component, ReactNode } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import React, {Component, ReactNode} from 'react';
+import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 
 interface Props {
   children: ReactNode;
@@ -13,11 +13,11 @@ interface State {
 class ErrorBoundary extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    this.state = { hasError: false, error: null };
+    this.state = {hasError: false, error: null};
   }
 
   static getDerivedStateFromError(error: Error): State {
-    return { hasError: true, error };
+    return {hasError: true, error};
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
@@ -25,7 +25,7 @@ class ErrorBoundary extends Component<Props, State> {
   }
 
   handleRetry = () => {
-    this.setState({ hasError: false, error: null });
+    this.setState({hasError: false, error: null});
   };
 
   render() {

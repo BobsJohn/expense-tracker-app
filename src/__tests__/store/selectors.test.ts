@@ -13,8 +13,8 @@ import {
   selectAccountReports,
   selectReportSummary,
 } from '@/store/selectors';
-import { RootState } from '@/store';
-import { Account, Transaction, Budget, ReportFilters } from '@/types';
+import {RootState} from '@/store';
+import {Account, Transaction, Budget, ReportFilters} from '@/types';
 
 describe('Store Selectors', () => {
   const mockAccounts: Account[] = [
@@ -140,7 +140,7 @@ describe('Store Selectors', () => {
     it('should handle empty accounts array', () => {
       const emptyState = {
         ...mockState,
-        accounts: { ...mockState.accounts, accounts: [] },
+        accounts: {...mockState.accounts, accounts: []},
       };
       const result = selectTotalBalance(emptyState);
       expect(result).toBe(0);
@@ -163,10 +163,10 @@ describe('Store Selectors', () => {
       // Mock current date to January 2024
       const mockDate = new Date('2024-01-15');
       jest.spyOn(global, 'Date').mockImplementation(() => mockDate);
-      
+
       const result = selectMonthlyIncome(mockState);
       expect(result).toBe(2000); // Only the salary transaction
-      
+
       jest.restoreAllMocks();
     });
   });
@@ -176,10 +176,10 @@ describe('Store Selectors', () => {
       // Mock current date to January 2024
       const mockDate = new Date('2024-01-15');
       jest.spyOn(global, 'Date').mockImplementation(() => mockDate);
-      
+
       const result = selectMonthlyExpenses(mockState);
       expect(result).toBe(150); // 100 + 50 (absolute values)
-      
+
       jest.restoreAllMocks();
     });
   });
@@ -187,7 +187,7 @@ describe('Store Selectors', () => {
   describe('selectBudgetProgress', () => {
     it('should calculate budget progress correctly', () => {
       const result = selectBudgetProgress(mockState);
-      
+
       expect(result).toHaveLength(2);
       expect(result[0]).toMatchObject({
         id: '1',
@@ -211,13 +211,13 @@ describe('Store Selectors', () => {
       // Mock current date to January 2024
       const mockDate = new Date('2024-01-15');
       jest.spyOn(global, 'Date').mockImplementation(() => mockDate);
-      
+
       const result = selectSpendingByCategory(mockState);
       expect(result).toEqual({
         Food: 100,
         Entertainment: 50,
       });
-      
+
       jest.restoreAllMocks();
     });
   });
@@ -232,14 +232,14 @@ describe('Store Selectors', () => {
     it('should return transactions constrained to the date range', () => {
       const result = selectTransactionsByDateRange(mockState, reportFilters);
       expect(result).toHaveLength(3);
-      expect(result.every((tx) => tx.date.startsWith('2024-01'))).toBe(true);
+      expect(result.every(tx => tx.date.startsWith('2024-01'))).toBe(true);
     });
 
     it('should aggregate income and expenses by the selected period', () => {
       const result = selectIncomeExpenseByPeriod(mockState, reportFilters);
       expect(result).toHaveLength(2);
-      expect(result[0]).toMatchObject({ income: 2000, expense: 0 });
-      expect(result[1]).toMatchObject({ income: 0, expense: 150 });
+      expect(result[0]).toMatchObject({income: 2000, expense: 0});
+      expect(result[1]).toMatchObject({income: 0, expense: 150});
     });
 
     it('should build a spending trend dataset from period data', () => {
@@ -252,15 +252,15 @@ describe('Store Selectors', () => {
     it('should aggregate expenses by category within the date range', () => {
       const result = selectCategoryDistributionReport(mockState, reportFilters);
       expect(result).toHaveLength(2);
-      expect(result[0]).toMatchObject({ category: 'Food', total: 100 });
-      expect(result[1]).toMatchObject({ category: 'Entertainment', total: 50 });
+      expect(result[0]).toMatchObject({category: 'Food', total: 100});
+      expect(result[1]).toMatchObject({category: 'Entertainment', total: 50});
     });
 
     it('should provide account reports with related transactions', () => {
       const result = selectAccountReports(mockState, reportFilters);
       expect(result).toHaveLength(3);
-      const checking = result.find((report) => report.accountId === '1');
-      const savings = result.find((report) => report.accountId === '2');
+      const checking = result.find(report => report.accountId === '1');
+      const savings = result.find(report => report.accountId === '2');
       expect(checking?.transactions).toHaveLength(2);
       expect(savings?.transactions).toHaveLength(1);
     });
@@ -270,10 +270,7 @@ describe('Store Selectors', () => {
       expect(result.totalIncome).toBe(2000);
       expect(result.totalExpense).toBe(150);
       expect(result.netBalance).toBe(1850);
-      expect(result.topCategories.map((item) => item.category)).toEqual([
-        'Food',
-        'Entertainment',
-      ]);
+      expect(result.topCategories.map(item => item.category)).toEqual(['Food', 'Entertainment']);
     });
   });
 });

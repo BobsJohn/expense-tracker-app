@@ -1,24 +1,19 @@
 import React from 'react';
-import { View, ActivityIndicator, Text, StyleSheet } from 'react-native';
-import { useTranslation } from 'react-i18next';
+import {View, ActivityIndicator, Text, StyleSheet} from 'react-native';
+import {useTranslation} from 'react-i18next';
 
 interface LoadingSpinnerProps {
   message?: string;
   size?: 'small' | 'large';
 }
 
-const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ 
-  message, 
-  size = 'large' 
-}) => {
-  const { t } = useTranslation();
+const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({message, size = 'large'}) => {
+  const {t} = useTranslation();
 
   return (
     <View style={styles.container}>
       <ActivityIndicator size={size} color="#007AFF" />
-      <Text style={styles.message}>
-        {message || t('common.loading')}
-      </Text>
+      <Text style={styles.message}>{message || t('common.loading')}</Text>
     </View>
   );
 };

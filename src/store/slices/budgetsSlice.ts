@@ -1,5 +1,5 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Budget } from '@/types';
+import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {Budget} from '@/types';
 
 interface BudgetsState {
   budgets: Budget[];
@@ -16,6 +16,9 @@ const initialState: BudgetsState = {
       spentAmount: 245.67,
       period: 'monthly',
       currency: 'USD',
+      alertThreshold: 80,
+      createdAt: '2024-01-01T00:00:00Z',
+      updatedAt: '2024-01-15T00:00:00Z',
     },
     {
       id: '2',
@@ -24,14 +27,20 @@ const initialState: BudgetsState = {
       spentAmount: 125.0,
       period: 'monthly',
       currency: 'USD',
+      alertThreshold: 75,
+      createdAt: '2024-01-01T00:00:00Z',
+      updatedAt: '2024-01-10T00:00:00Z',
     },
     {
       id: '3',
       category: 'Entertainment',
       budgetedAmount: 200.0,
-      spentAmount: 89.99,
+      spentAmount: 189.99,
       period: 'monthly',
       currency: 'USD',
+      alertThreshold: 90,
+      createdAt: '2024-01-01T00:00:00Z',
+      updatedAt: '2024-01-20T00:00:00Z',
     },
   ],
   loading: false,
@@ -48,22 +57,53 @@ const budgetsSlice = createSlice({
     setError: (state, action: PayloadAction<string | null>) => {
       state.error = action.payload;
     },
-    addBudget: (state, action: PayloadAction<Budget>) => {
-      state.budgets.push(action.payload);
+    addBudget: (
+      state,
+      action: PayloadAction<Omit<Budget, 'id' | 'createdAt' | 'updatedAt' | 'spentAmount'>>,
+    ) => {
+      const now = new Date().toISOString();
+      const newBudget: Budget = {
+        ...action.payload,
+        id: Date.now().toString(),
+        spentAmount: 0,
+        createdAt: now,
+        updatedAt: now,
+      };
+      state.budgets.push(newBudget);
     },
     updateBudget: (state, action: PayloadAction<Budget>) => {
       const index = state.budgets.findIndex(budget => budget.id === action.payload.id);
       if (index !== -1) {
-        state.budgets[index] = action.payload;
+        state.budgets[index] = {
+          ...action.payload,
+          updatedAt: new Date().toISOString(),
+        };
       }
     },
     deleteBudget: (state, action: PayloadAction<string>) => {
       state.budgets = state.budgets.filter(budget => budget.id !== action.payload);
     },
-    updateBudgetSpent: (state, action: PayloadAction<{ budgetId: string; amount: number }>) => {
+    updateBudgetSpent: (state, action: PayloadAction<{budgetId: string; amount: number}>) => {
       const budget = state.budgets.find(b => b.id === action.payload.budgetId);
       if (budget) {
         budget.spentAmount += action.payload.amount;
+        budget.updatedAt = new Date().toISOString();
+      }
+    },
+    resetBudgetSpending: (state, action: PayloadAction<string | undefined>) => {
+      if (action.payload) {
+        // Reset specific budget
+        const budget = state.budgets.find(b => b.id === action.payload);
+        if (budget) {
+          budget.spentAmount = 0;
+          budget.updatedAt = new Date().toISOString();
+        }
+      } else {
+        // Reset all budgets (for monthly reset)
+        state.budgets.forEach(budget => {
+          budget.spentAmount = 0;
+          budget.updatedAt = new Date().toISOString();
+        });
       }
     },
   },
@@ -76,6 +116,7 @@ export const {
   updateBudget,
   deleteBudget,
   updateBudgetSpent,
+  resetBudgetSpending,
 } = budgetsSlice.actions;
 
 export default budgetsSlice.reducer;

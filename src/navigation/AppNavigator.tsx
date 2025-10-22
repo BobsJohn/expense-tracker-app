@@ -1,8 +1,8 @@
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createStackNavigator } from '@react-navigation/stack';
-import { useTranslation } from 'react-i18next';
+import {NavigationContainer} from '@react-navigation/native';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {createStackNavigator} from '@react-navigation/stack';
+import {useTranslation} from 'react-i18next';
 
 // Screens
 import DashboardScreen from '@/screens/dashboard/DashboardScreen';
@@ -11,18 +11,18 @@ import AccountDetailsScreen from '@/screens/accounts/AccountDetailsScreen';
 import ReportsScreen from '@/screens/reports/ReportsScreen';
 import SettingsScreen from '@/screens/settings/SettingsScreen';
 import ExportScreen from '@/screens/export/ExportScreen';
-// import BudgetsScreen from '@/screens/budgets/BudgetsScreen';
+import BudgetsScreen from '@/screens/budgets/BudgetsScreen';
 // import TransactionsScreen from '@/screens/transactions/TransactionsScreen';
 
-import { BottomTabParamList, RootStackParamList } from '@/types';
+import {BottomTabParamList, RootStackParamList} from '@/types';
 
 const Tab = createBottomTabNavigator<BottomTabParamList>();
 const Stack = createStackNavigator<RootStackParamList>();
 
 // Temporary placeholder components for missing screens
-import { View, Text, StyleSheet } from 'react-native';
+import {View, Text, StyleSheet} from 'react-native';
 
-const PlaceholderScreen = ({ title }: { title: string }) => (
+const PlaceholderScreen = ({title}: {title: string}) => (
   <View style={placeholderStyles.container}>
     <Text style={placeholderStyles.text}>{title} - Coming Soon</Text>
   </View>
@@ -41,11 +41,10 @@ const placeholderStyles = StyleSheet.create({
   },
 });
 
-const BudgetsScreen = () => <PlaceholderScreen title="Budgets" />;
 const TransactionsScreen = () => <PlaceholderScreen title="Transactions" />;
 
 const MainTabs: React.FC = () => {
-  const { t } = useTranslation();
+  const {t} = useTranslation();
 
   return (
     <Tab.Navigator
@@ -65,10 +64,9 @@ const MainTabs: React.FC = () => {
         headerTitleStyle: {
           fontWeight: 'bold',
         },
-      }}
-    >
-      <Tab.Screen 
-        name="Dashboard" 
+      }}>
+      <Tab.Screen
+        name="Dashboard"
         component={DashboardScreen}
         options={{
           title: t('navigation.dashboard'),
@@ -83,30 +81,30 @@ const MainTabs: React.FC = () => {
           headerShown: false,
         }}
       />
-      <Tab.Screen 
-        name="Accounts" 
+      <Tab.Screen
+        name="Accounts"
         component={AccountsScreen}
         options={{
           title: t('navigation.accounts'),
           headerShown: false,
         }}
       />
-      <Tab.Screen 
-        name="Budgets" 
+      <Tab.Screen
+        name="Budgets"
         component={BudgetsScreen}
         options={{
           title: t('navigation.budgets'),
         }}
       />
-      <Tab.Screen 
-        name="Transactions" 
+      <Tab.Screen
+        name="Transactions"
         component={TransactionsScreen}
         options={{
           title: t('navigation.transactions'),
         }}
       />
-      <Tab.Screen 
-        name="Settings" 
+      <Tab.Screen
+        name="Settings"
         component={SettingsScreen}
         options={{
           title: t('navigation.settings'),
@@ -117,26 +115,18 @@ const MainTabs: React.FC = () => {
 };
 
 const AppNavigator: React.FC = () => {
-  const { t } = useTranslation();
-  
+  const {t} = useTranslation();
+
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen 
-          name="Dashboard"
-          component={MainTabs}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen 
+        <Stack.Screen name="Dashboard" component={MainTabs} options={{headerShown: false}} />
+        <Stack.Screen
           name="AccountDetails"
           component={AccountDetailsScreen}
-          options={{ title: 'Account Details' }}
+          options={{title: 'Account Details'}}
         />
-        <Stack.Screen 
-          name="Export"
-          component={ExportScreen}
-          options={{ title: t('export.title') }}
-        />
+        <Stack.Screen name="Export" component={ExportScreen} options={{title: t('export.title')}} />
       </Stack.Navigator>
     </NavigationContainer>
   );
