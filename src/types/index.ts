@@ -42,6 +42,7 @@ export type RootStackParamList = {
   Transactions: undefined;
   AddTransaction: { accountId?: string };
   Settings: undefined;
+  Export: undefined;
 };
 
 export type BottomTabParamList = {
