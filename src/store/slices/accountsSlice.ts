@@ -1,5 +1,5 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Account } from '@/types';
+import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {Account} from '@/types';
 
 interface AccountsState {
   accounts: Account[];
@@ -57,7 +57,7 @@ const accountsSlice = createSlice({
     deleteAccount: (state, action: PayloadAction<string>) => {
       state.accounts = state.accounts.filter(acc => acc.id !== action.payload);
     },
-    updateAccountBalance: (state, action: PayloadAction<{ accountId: string; amount: number }>) => {
+    updateAccountBalance: (state, action: PayloadAction<{accountId: string; amount: number}>) => {
       const account = state.accounts.find(acc => acc.id === action.payload.accountId);
       if (account) {
         account.balance += action.payload.amount;

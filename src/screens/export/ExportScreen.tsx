@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, {useState, useMemo} from 'react';
 import {
   View,
   Text,
@@ -10,20 +10,20 @@ import {
   ActivityIndicator,
   TextInput,
 } from 'react-native';
-import { useSelector } from 'react-redux';
-import { useTranslation } from 'react-i18next';
-import { useNavigation } from '@react-navigation/native';
+import {useSelector} from 'react-redux';
+import {useTranslation} from 'react-i18next';
+import {useNavigation} from '@react-navigation/native';
 
-import { RootState } from '@/store';
-import exportService, { ExportOptions } from '@/services/exportService';
+import {RootState} from '@/store';
+import exportService, {ExportOptions} from '@/services/exportService';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
 
 const ExportScreen: React.FC = () => {
-  const { t } = useTranslation();
+  const {t} = useTranslation();
   const navigation = useNavigation();
-  
-  const { accounts, transactions, budgets } = useSelector((state: RootState) => ({
+
+  const {accounts, transactions, budgets} = useSelector((state: RootState) => ({
     accounts: state.accounts.accounts,
     transactions: state.transactions.transactions,
     budgets: state.budgets.budgets,
@@ -53,18 +53,14 @@ const ExportScreen: React.FC = () => {
   }, [transactions, budgets]);
 
   const handleAccountToggle = (accountId: string) => {
-    setSelectedAccountIds(prev => 
-      prev.includes(accountId) 
-        ? prev.filter(id => id !== accountId)
-        : [...prev, accountId]
+    setSelectedAccountIds(prev =>
+      prev.includes(accountId) ? prev.filter(id => id !== accountId) : [...prev, accountId],
     );
   };
 
   const handleCategoryToggle = (category: string) => {
-    setSelectedCategories(prev => 
-      prev.includes(category)
-        ? prev.filter(c => c !== category)
-        : [...prev, category]
+    setSelectedCategories(prev =>
+      prev.includes(category) ? prev.filter(c => c !== category) : [...prev, category],
     );
   };
 
@@ -86,10 +82,7 @@ const ExportScreen: React.FC = () => {
 
   const handleExport = async () => {
     if (!includeTransactions && !includeBudgets) {
-      Alert.alert(
-        t('export.error'),
-        t('export.selectDataTypeError')
-      );
+      Alert.alert(t('export.error'), t('export.selectDataTypeError'));
       return;
     }
 
@@ -98,7 +91,7 @@ const ExportScreen: React.FC = () => {
     try {
       const options: ExportOptions = {
         format,
-        dateRange: { startDate, endDate },
+        dateRange: {startDate, endDate},
         includeTransactions,
         includeBudgets,
         selectedAccountIds: selectedAccountIds.length > 0 ? selectedAccountIds : undefined,
@@ -109,29 +102,25 @@ const ExportScreen: React.FC = () => {
 
       if (result.success && result.filePath) {
         // Show success message and ask if user wants to share
-        Alert.alert(
-          t('export.success'),
-          t('export.exportSuccessMessage'),
-          [
-            {
-              text: t('common.cancel'),
-              style: 'cancel',
+        Alert.alert(t('export.success'), t('export.exportSuccessMessage'), [
+          {
+            text: t('common.cancel'),
+            style: 'cancel',
+          },
+          {
+            text: t('export.share'),
+            onPress: async () => {
+              const shareResult = await exportService.shareFile(
+                result.filePath!,
+                t('export.shareTitle'),
+              );
+              if (!shareResult.success && shareResult.error) {
+                Alert.alert(t('export.error'), shareResult.error);
+              }
             },
-            {
-              text: t('export.share'),
-              onPress: async () => {
-                const shareResult = await exportService.shareFile(
-                  result.filePath!,
-                  t('export.shareTitle')
-                );
-                if (!shareResult.success && shareResult.error) {
-                  Alert.alert(t('export.error'), shareResult.error);
-                }
-              },
-            },
-          ]
-        );
-        
+          },
+        ]);
+
         // Cleanup old files
         await exportService.cleanupTempFiles();
       } else {
@@ -151,17 +140,17 @@ const ExportScreen: React.FC = () => {
         <View style={styles.formatContainer}>
           <TouchableOpacity
             style={[styles.formatButton, format === 'csv' && styles.formatButtonActive]}
-            onPress={() => setFormat('csv')}
-          >
-            <Text style={[styles.formatButtonText, format === 'csv' && styles.formatButtonTextActive]}>
+            onPress={() => setFormat('csv')}>
+            <Text
+              style={[styles.formatButtonText, format === 'csv' && styles.formatButtonTextActive]}>
               CSV
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.formatButton, format === 'xlsx' && styles.formatButtonActive]}
-            onPress={() => setFormat('xlsx')}
-          >
-            <Text style={[styles.formatButtonText, format === 'xlsx' && styles.formatButtonTextActive]}>
+            onPress={() => setFormat('xlsx')}>
+            <Text
+              style={[styles.formatButtonText, format === 'xlsx' && styles.formatButtonTextActive]}>
               Excel (XLSX)
             </Text>
           </TouchableOpacity>
@@ -175,7 +164,7 @@ const ExportScreen: React.FC = () => {
           <Switch
             value={includeTransactions}
             onValueChange={setIncludeTransactions}
-            trackColor={{ false: '#E5E5EA', true: '#34C759' }}
+            trackColor={{false: '#E5E5EA', true: '#34C759'}}
             thumbColor="#FFF"
           />
         </View>
@@ -184,7 +173,7 @@ const ExportScreen: React.FC = () => {
           <Switch
             value={includeBudgets}
             onValueChange={setIncludeBudgets}
-            trackColor={{ false: '#E5E5EA', true: '#34C759' }}
+            trackColor={{false: '#E5E5EA', true: '#34C759'}}
             thumbColor="#FFF"
           />
         </View>
@@ -224,7 +213,9 @@ const ExportScreen: React.FC = () => {
             <Text style={styles.sectionTitle}>{t('export.accounts')}</Text>
             <TouchableOpacity onPress={handleSelectAllAccounts}>
               <Text style={styles.selectAllText}>
-                {selectedAccountIds.length === accounts.length ? t('export.deselectAll') : t('export.selectAll')}
+                {selectedAccountIds.length === accounts.length
+                  ? t('export.deselectAll')
+                  : t('export.selectAll')}
               </Text>
             </TouchableOpacity>
           </View>
@@ -232,9 +223,12 @@ const ExportScreen: React.FC = () => {
             <TouchableOpacity
               key={account.id}
               style={styles.checkboxRow}
-              onPress={() => handleAccountToggle(account.id)}
-            >
-              <View style={[styles.checkbox, selectedAccountIds.includes(account.id) && styles.checkboxChecked]}>
+              onPress={() => handleAccountToggle(account.id)}>
+              <View
+                style={[
+                  styles.checkbox,
+                  selectedAccountIds.includes(account.id) && styles.checkboxChecked,
+                ]}>
                 {selectedAccountIds.includes(account.id) && <Text style={styles.checkmark}>✓</Text>}
               </View>
               <Text style={styles.checkboxLabel}>{account.name}</Text>
@@ -249,7 +243,9 @@ const ExportScreen: React.FC = () => {
             <Text style={styles.sectionTitle}>{t('export.categories')}</Text>
             <TouchableOpacity onPress={handleSelectAllCategories}>
               <Text style={styles.selectAllText}>
-                {selectedCategories.length === availableCategories.length ? t('export.deselectAll') : t('export.selectAll')}
+                {selectedCategories.length === availableCategories.length
+                  ? t('export.deselectAll')
+                  : t('export.selectAll')}
               </Text>
             </TouchableOpacity>
           </View>
@@ -257,9 +253,12 @@ const ExportScreen: React.FC = () => {
             <TouchableOpacity
               key={category}
               style={styles.checkboxRow}
-              onPress={() => handleCategoryToggle(category)}
-            >
-              <View style={[styles.checkbox, selectedCategories.includes(category) && styles.checkboxChecked]}>
+              onPress={() => handleCategoryToggle(category)}>
+              <View
+                style={[
+                  styles.checkbox,
+                  selectedCategories.includes(category) && styles.checkboxChecked,
+                ]}>
                 {selectedCategories.includes(category) && <Text style={styles.checkmark}>✓</Text>}
               </View>
               <Text style={styles.checkboxLabel}>{category}</Text>

@@ -10,7 +10,7 @@ export const showToast = {
       visibilityTime: 3000,
     });
   },
-  
+
   error: (message: string, title?: string) => {
     Toast.show({
       type: 'error',
@@ -20,7 +20,7 @@ export const showToast = {
       visibilityTime: 4000,
     });
   },
-  
+
   info: (message: string, title?: string) => {
     Toast.show({
       type: 'info',
@@ -30,7 +30,7 @@ export const showToast = {
       visibilityTime: 3000,
     });
   },
-  
+
   warning: (message: string, title?: string) => {
     Toast.show({
       type: 'error', // Using error type for warnings since react-native-toast-message doesn't have warning

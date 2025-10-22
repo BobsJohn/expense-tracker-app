@@ -23,6 +23,9 @@ export interface Budget {
   spentAmount: number;
   period: 'monthly' | 'yearly';
   currency: string;
+  alertThreshold?: number; // Percentage (0-100) at which to trigger alerts
+  createdAt: string;
+  updatedAt: string;
 }
 
 export type TimeGranularity = 'daily' | 'weekly' | 'monthly' | 'yearly';
@@ -81,11 +84,11 @@ export interface AppState {
 export type RootStackParamList = {
   Dashboard: undefined;
   Accounts: undefined;
-  AccountDetails: { accountId: string };
+  AccountDetails: {accountId: string};
   Budgets: undefined;
-  BudgetDetails: { budgetId: string };
+  BudgetDetails: {budgetId: string};
   Transactions: undefined;
-  AddTransaction: { accountId?: string };
+  AddTransaction: {accountId?: string};
   Settings: undefined;
   Export: undefined;
 };

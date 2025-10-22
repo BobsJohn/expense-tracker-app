@@ -1,5 +1,5 @@
-import { renderHook, act } from '@testing-library/react-native';
-import { useAsyncOperation } from '@/hooks/useAsyncOperation';
+import {renderHook, act} from '@testing-library/react-native';
+import {useAsyncOperation} from '@/hooks/useAsyncOperation';
 
 // Mock the toast service and haptics
 jest.mock('@/services/toastService', () => ({
@@ -22,7 +22,7 @@ describe('useAsyncOperation', () => {
   });
 
   it('should initialize with default state', () => {
-    const { result } = renderHook(() => useAsyncOperation<string>());
+    const {result} = renderHook(() => useAsyncOperation<string>());
 
     expect(result.current.state).toEqual({
       data: null,
@@ -32,7 +32,7 @@ describe('useAsyncOperation', () => {
   });
 
   it('should handle successful operations', async () => {
-    const { result } = renderHook(() => useAsyncOperation<string>());
+    const {result} = renderHook(() => useAsyncOperation<string>());
     const mockOperation = jest.fn().mockResolvedValue('success');
 
     await act(async () => {
@@ -50,7 +50,7 @@ describe('useAsyncOperation', () => {
   });
 
   it('should handle failed operations', async () => {
-    const { result } = renderHook(() => useAsyncOperation<string>());
+    const {result} = renderHook(() => useAsyncOperation<string>());
     const mockError = new Error('Test error');
     const mockOperation = jest.fn().mockRejectedValue(mockError);
 
@@ -67,12 +67,12 @@ describe('useAsyncOperation', () => {
   });
 
   it('should set loading state during operation', async () => {
-    const { result } = renderHook(() => useAsyncOperation<string>());
+    const {result} = renderHook(() => useAsyncOperation<string>());
     let resolvePromise: (value: string) => void;
     const mockOperation = jest.fn().mockReturnValue(
-      new Promise<string>((resolve) => {
+      new Promise<string>(resolve => {
         resolvePromise = resolve;
-      })
+      }),
     );
 
     act(() => {
@@ -91,7 +91,7 @@ describe('useAsyncOperation', () => {
   });
 
   it('should reset state correctly', () => {
-    const { result } = renderHook(() => useAsyncOperation<string>());
+    const {result} = renderHook(() => useAsyncOperation<string>());
 
     // Set some state
     act(() => {

@@ -1,6 +1,13 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet, ViewStyle, TextStyle, ActivityIndicator } from 'react-native';
-import { triggerHapticFeedback } from '@/utils/haptics';
+import {
+  TouchableOpacity,
+  Text,
+  StyleSheet,
+  ViewStyle,
+  TextStyle,
+  ActivityIndicator,
+} from 'react-native';
+import {triggerHapticFeedback} from '@/utils/haptics';
 
 interface ButtonProps {
   title: string;
@@ -41,17 +48,11 @@ const Button: React.FC<ButtonProps> = ({
       ]}
       onPress={handlePress}
       disabled={disabled || loading}
-      activeOpacity={0.8}
-    >
+      activeOpacity={0.8}>
       {loading ? (
-        <ActivityIndicator 
-          size="small" 
-          color={variant === 'primary' ? '#FFF' : '#007AFF'} 
-        />
+        <ActivityIndicator size="small" color={variant === 'primary' ? '#FFF' : '#007AFF'} />
       ) : (
-        <Text style={[styles.text, styles[`${variant}Text`], textStyle]}>
-          {title}
-        </Text>
+        <Text style={[styles.text, styles[`${variant}Text`], textStyle]}>{title}</Text>
       )}
     </TouchableOpacity>
   );

@@ -1,9 +1,7 @@
-import { createSelector } from '@reduxjs/toolkit';
-import { RootState } from './index';
+import {createSelector} from '@reduxjs/toolkit';
+import {RootState} from './index';
 import {
   Account,
-  Transaction,
-  Budget,
   ReportFilters,
   TimeGranularity,
   PeriodReportDatum,
@@ -21,104 +19,152 @@ export const selectBudgets = (state: RootState) => state.budgets.budgets;
 // Account selectors
 export const selectAccountById = createSelector(
   [selectAccounts, (state: RootState, accountId: string) => accountId],
-  (accounts, accountId) => accounts.find(account => account.id === accountId)
+  (accounts, accountId) => accounts.find(account => account.id === accountId),
 );
 
-export const selectTotalBalance = createSelector(
-  [selectAccounts],
-  (accounts) => accounts.reduce((total, account) => {
+export const selectTotalBalance = createSelector([selectAccounts], accounts =>
+  accounts.reduce((total, account) => {
     // Only include positive balances for net worth calculation
-    return account.type === 'credit' 
+    return account.type === 'credit'
       ? total + account.balance // Credit balances are negative, so this subtracts debt
       : total + account.balance;
-  }, 0)
+  }, 0),
 );
 
-export const selectAccountsByType = createSelector(
-  [selectAccounts],
-  (accounts) => accounts.reduce((acc, account) => {
+export const selectAccountsByType = createSelector([selectAccounts], accounts =>
+  accounts.reduce((acc, account) => {
     if (!acc[account.type]) {
       acc[account.type] = [];
     }
     acc[account.type].push(account);
     return acc;
-  }, {} as Record<string, Account[]>)
+  }, {} as Record<string, Account[]>),
 );
 
 // Transaction selectors
 export const selectTransactionsByAccount = createSelector(
   [selectTransactions, (state: RootState, accountId: string) => accountId],
-  (transactions, accountId) => 
-    transactions.filter(transaction => transaction.accountId === accountId)
-      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-);
-
-export const selectRecentTransactions = createSelector(
-  [selectTransactions],
-  (transactions) => 
+  (transactions, accountId) =>
     transactions
-      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-      .slice(0, 10)
+      .filter(transaction => transaction.accountId === accountId)
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()),
 );
 
-export const selectMonthlyIncome = createSelector(
-  [selectTransactions],
-  (transactions) => {
-    const currentMonth = new Date().getMonth();
-    const currentYear = new Date().getFullYear();
-    
-    return transactions
-      .filter(tx => {
-        const txDate = new Date(tx.date);
-        return txDate.getMonth() === currentMonth && 
-               txDate.getFullYear() === currentYear &&
-               tx.type === 'income';
-      })
-      .reduce((sum, tx) => sum + Math.abs(tx.amount), 0);
-  }
+export const selectRecentTransactions = createSelector([selectTransactions], transactions =>
+  transactions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).slice(0, 10),
 );
 
-export const selectMonthlyExpenses = createSelector(
-  [selectTransactions],
-  (transactions) => {
-    const currentMonth = new Date().getMonth();
-    const currentYear = new Date().getFullYear();
-    
-    return transactions
-      .filter(tx => {
-        const txDate = new Date(tx.date);
-        return txDate.getMonth() === currentMonth && 
-               txDate.getFullYear() === currentYear &&
-               tx.type === 'expense';
-      })
-      .reduce((sum, tx) => sum + Math.abs(tx.amount), 0);
-  }
-);
+export const selectMonthlyIncome = createSelector([selectTransactions], transactions => {
+  const currentMonth = new Date().getMonth();
+  const currentYear = new Date().getFullYear();
+
+  return transactions
+    .filter(tx => {
+      const txDate = new Date(tx.date);
+      return (
+        txDate.getMonth() === currentMonth &&
+        txDate.getFullYear() === currentYear &&
+        tx.type === 'income'
+      );
+    })
+    .reduce((sum, tx) => sum + Math.abs(tx.amount), 0);
+});
+
+export const selectMonthlyExpenses = createSelector([selectTransactions], transactions => {
+  const currentMonth = new Date().getMonth();
+  const currentYear = new Date().getFullYear();
+
+  return transactions
+    .filter(tx => {
+      const txDate = new Date(tx.date);
+      return (
+        txDate.getMonth() === currentMonth &&
+        txDate.getFullYear() === currentYear &&
+        tx.type === 'expense'
+      );
+    })
+    .reduce((sum, tx) => sum + Math.abs(tx.amount), 0);
+});
 
 // Budget selectors
 export const selectBudgetById = createSelector(
   [selectBudgets, (state: RootState, budgetId: string) => budgetId],
-  (budgets, budgetId) => budgets.find(budget => budget.id === budgetId)
+  (budgets, budgetId) => budgets.find(budget => budget.id === budgetId),
 );
+
+// Category spending analysis
+export const selectSpendingByCategory = createSelector([selectTransactions], transactions => {
+  const currentMonth = new Date().getMonth();
+  const currentYear = new Date().getFullYear();
+
+  return transactions
+    .filter(tx => {
+      const txDate = new Date(tx.date);
+      return (
+        txDate.getMonth() === currentMonth &&
+        txDate.getFullYear() === currentYear &&
+        tx.type === 'expense'
+      );
+    })
+    .reduce((acc, tx) => {
+      const category = tx.category;
+      acc[category] = (acc[category] || 0) + Math.abs(tx.amount);
+      return acc;
+    }, {} as Record<string, number>);
+});
 
 export const selectBudgetProgress = createSelector(
-  [selectBudgets],
-  (budgets) => budgets.map(budget => ({
-    ...budget,
-    progressPercentage: Math.min((budget.spentAmount / budget.budgetedAmount) * 100, 100),
-    remainingAmount: budget.budgetedAmount - budget.spentAmount,
-    isOverBudget: budget.spentAmount > budget.budgetedAmount,
-  }))
+  [selectBudgets, selectSpendingByCategory],
+  (budgets, spendingByCategory) =>
+    budgets.map(budget => {
+      const actualSpent = spendingByCategory[budget.category] || 0;
+      const progressPercentage = Math.min((actualSpent / budget.budgetedAmount) * 100, 100);
+      const isOverBudget = actualSpent > budget.budgetedAmount;
+      const alertThreshold = budget.alertThreshold || 80;
+      const isNearThreshold = progressPercentage >= alertThreshold && !isOverBudget;
+
+      return {
+        ...budget,
+        spentAmount: actualSpent, // Use real-time calculation
+        progressPercentage,
+        remainingAmount: budget.budgetedAmount - actualSpent,
+        isOverBudget,
+        isNearThreshold,
+        alertThreshold,
+        progressColor: isOverBudget ? '#FF3B30' : isNearThreshold ? '#FF9500' : '#34C759',
+      };
+    }),
 );
 
-export const selectTotalBudgeted = createSelector(
-  [selectBudgets],
-  (budgets) => budgets.reduce((total, budget) => total + budget.budgetedAmount, 0)
+export const selectTotalBudgeted = createSelector([selectBudgets], budgets =>
+  budgets.reduce((total, budget) => total + budget.budgetedAmount, 0),
 );
 
-export const selectTotalSpent = createSelector(
-  [selectBudgets],
-  (budgets) => budgets.reduce((total, budget) => total + budget.spentAmount, 0)
+export const selectTotalSpent = createSelector([selectBudgetProgress], budgets =>
+  budgets.reduce((total, budget) => total + budget.spentAmount, 0),
+);
+
+export const selectOverspentBudgets = createSelector([selectBudgetProgress], budgets =>
+  budgets.filter(budget => budget.isOverBudget),
+);
+
+export const selectBudgetsNearThreshold = createSelector([selectBudgetProgress], budgets =>
+  budgets.filter(budget => budget.isNearThreshold),
+);
+
+export const selectBudgetSummary = createSelector(
+  [selectTotalBudgeted, selectTotalSpent, selectOverspentBudgets],
+  (totalBudgeted, totalSpent, overspentBudgets) => ({
+    totalBudgeted,
+    totalSpent,
+    totalRemaining: totalBudgeted - totalSpent,
+    overspentCount: overspentBudgets.length,
+    totalOverspent: overspentBudgets.reduce(
+      (sum, budget) => sum + Math.max(0, budget.spentAmount - budget.budgetedAmount),
+      0,
+    ),
+    progressPercentage: totalBudgeted > 0 ? Math.min((totalSpent / totalBudgeted) * 100, 100) : 0,
+  }),
 );
 
 const toDate = (value: Date | string): Date => {
@@ -187,29 +233,23 @@ const getPeriodEnd = (start: Date, granularity: TimeGranularity): Date => {
   return endOfDay(base);
 };
 
-const formatDateParts = (
-  date: Date,
-  options: Intl.DateTimeFormatOptions,
-): string => date.toLocaleDateString(undefined, options);
+const formatDateParts = (date: Date, options: Intl.DateTimeFormatOptions): string =>
+  date.toLocaleDateString(undefined, options);
 
-const getPeriodLabel = (
-  start: Date,
-  end: Date,
-  granularity: TimeGranularity,
-): string => {
+const getPeriodLabel = (start: Date, end: Date, granularity: TimeGranularity): string => {
   switch (granularity) {
     case 'weekly':
-      return `${formatDateParts(start, { month: 'short', day: 'numeric' })} - ${formatDateParts(
-        end,
-        { month: 'short', day: 'numeric' },
-      )}`;
+      return `${formatDateParts(start, {month: 'short', day: 'numeric'})} - ${formatDateParts(end, {
+        month: 'short',
+        day: 'numeric',
+      })}`;
     case 'monthly':
-      return formatDateParts(start, { month: 'short', year: 'numeric' });
+      return formatDateParts(start, {month: 'short', year: 'numeric'});
     case 'yearly':
-      return formatDateParts(start, { year: 'numeric' });
+      return formatDateParts(start, {year: 'numeric'});
     case 'daily':
     default:
-      return formatDateParts(start, { month: 'short', day: 'numeric' });
+      return formatDateParts(start, {month: 'short', day: 'numeric'});
   }
 };
 
@@ -225,7 +265,7 @@ export const selectTransactionsByDateRange = createSelector(
     const start = normalizeDate(toDate(filters.startDate));
     const end = endOfDay(toDate(filters.endDate));
 
-    return transactions.filter((transaction) => {
+    return transactions.filter(transaction => {
       const txDate = toDate(transaction.date);
       return txDate >= start && txDate <= end;
     });
@@ -241,7 +281,7 @@ export const selectIncomeExpenseByPeriod = createSelector(
 
     const bucketMap = new Map<string, PeriodReportDatum>();
 
-    transactions.forEach((transaction) => {
+    transactions.forEach(transaction => {
       const txDate = toDate(transaction.date);
       const periodStart = getPeriodStart(txDate, filters.granularity);
       const periodEnd = getPeriodEnd(periodStart, filters.granularity);
@@ -277,25 +317,25 @@ export const selectIncomeExpenseByPeriod = createSelector(
 export const selectSpendingTrendReport = createSelector(
   [selectIncomeExpenseByPeriod],
   (periods): TrendReportDatum[] =>
-    periods.map((period) => ({
+    periods.map(period => ({
       periodKey: period.periodKey,
       label: period.label,
       value: period.expense,
-      transactions: period.transactions.filter((tx) => tx.type === 'expense'),
+      transactions: period.transactions.filter(tx => tx.type === 'expense'),
     })),
 );
 
 export const selectCategoryDistributionReport = createSelector(
   [selectTransactionsByDateRange],
-  (transactions) => {
-    const expenses = transactions.filter((tx) => tx.type === 'expense');
+  transactions => {
+    const expenses = transactions.filter(tx => tx.type === 'expense');
     if (!expenses.length) {
       return [] as CategoryReportDatum[];
     }
 
     const map = new Map<string, CategoryReportDatum>();
 
-    expenses.forEach((transaction) => {
+    expenses.forEach(transaction => {
       const key = transaction.category || 'Uncategorized';
       if (!map.has(key)) {
         map.set(key, {
@@ -318,9 +358,9 @@ export const selectAccountReports = createSelector(
   [selectAccounts, selectTransactionsByDateRange],
   (accounts, transactions) =>
     accounts
-      .map((account) => {
+      .map(account => {
         const relatedTransactions = transactions.filter(
-          (transaction) => transaction.accountId === account.id,
+          transaction => transaction.accountId === account.id,
         );
         return {
           accountId: account.id,
@@ -329,7 +369,7 @@ export const selectAccountReports = createSelector(
           transactions: relatedTransactions,
         } as AccountReportDatum;
       })
-      .filter((report) => report.balance !== 0 || report.transactions.length > 0),
+      .filter(report => report.balance !== 0 || report.transactions.length > 0),
 );
 
 export const selectReportSummary = createSelector(
@@ -341,7 +381,7 @@ export const selectReportSummary = createSelector(
         acc.expense += period.expense;
         return acc;
       },
-      { income: 0, expense: 0 },
+      {income: 0, expense: 0},
     );
 
     const summary: ReportSummary = {
@@ -355,31 +395,12 @@ export const selectReportSummary = createSelector(
   },
 );
 
-// Category spending analysis
-export const selectSpendingByCategory = createSelector(
-  [selectTransactions],
-  (transactions) => {
-    const currentMonth = new Date().getMonth();
-    const currentYear = new Date().getFullYear();
-    
-    return transactions
-      .filter(tx => {
-        const txDate = new Date(tx.date);
-        return txDate.getMonth() === currentMonth && 
-               txDate.getFullYear() === currentYear &&
-               tx.type === 'expense';
-      })
-      .reduce((acc, tx) => {
-        const category = tx.category;
-        acc[category] = (acc[category] || 0) + Math.abs(tx.amount);
-        return acc;
-      }, {} as Record<string, number>);
-  }
-);
-
 // Loading and error selectors
-export const selectIsLoading = (state: RootState) => 
-  state.accounts.loading || state.transactions.loading || state.budgets.loading || state.app.isLoading;
+export const selectIsLoading = (state: RootState) =>
+  state.accounts.loading ||
+  state.transactions.loading ||
+  state.budgets.loading ||
+  state.app.isLoading;
 
 export const selectErrors = (state: RootState) => ({
   accounts: state.accounts.error,

@@ -1,23 +1,23 @@
-import React, { useMemo } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
-import { useRoute, RouteProp } from '@react-navigation/native';
-import { useTranslation } from 'react-i18next';
-import { useAppSelector } from '@/hooks/useAppSelector';
-import { selectAccountById, selectTransactionsByAccount } from '@/store/selectors';
+import React, {useMemo} from 'react';
+import {View, Text, StyleSheet, ScrollView} from 'react-native';
+import {useRoute, RouteProp} from '@react-navigation/native';
+import {useTranslation} from 'react-i18next';
+import {useAppSelector} from '@/hooks/useAppSelector';
+import {selectAccountById, selectTransactionsByAccount} from '@/store/selectors';
 import Card from '@/components/ui/Card';
 import VirtualizedList from '@/components/ui/VirtualizedList';
 import LoadingSpinner from '@/components/common/LoadingSpinner';
 import ErrorState from '@/components/common/ErrorState';
-import { formatCurrency } from '@/utils/currency';
-import { Transaction } from '@/types';
-import { RootStackParamList } from '@/types';
+import {formatCurrency} from '@/utils/currency';
+import {Transaction} from '@/types';
+import {RootStackParamList} from '@/types';
 
 type AccountDetailsRouteProp = RouteProp<RootStackParamList, 'AccountDetails'>;
 
 const AccountDetailsScreen: React.FC = () => {
-  const { t } = useTranslation();
+  const {t} = useTranslation();
   const route = useRoute<AccountDetailsRouteProp>();
-  const { accountId } = route.params;
+  const {accountId} = route.params;
 
   const account = useAppSelector(state => selectAccountById(state, accountId));
   const transactions = useAppSelector(state => selectTransactionsByAccount(state, accountId));
@@ -50,7 +50,7 @@ const AccountDetailsScreen: React.FC = () => {
     };
   }, [transactions]);
 
-  const renderTransaction = ({ item }: { item: Transaction }) => (
+  const renderTransaction = ({item}: {item: Transaction}) => (
     <View style={styles.transactionItem}>
       <View style={styles.transactionContent}>
         <View style={styles.transactionInfo}>
@@ -58,15 +58,15 @@ const AccountDetailsScreen: React.FC = () => {
           <Text style={styles.transactionCategory}>{item.category}</Text>
         </View>
         <View style={styles.transactionRight}>
-          <Text style={[
-            styles.transactionAmount,
-            item.type === 'income' ? styles.incomeAmount : styles.expenseAmount
-          ]}>
-            {item.type === 'income' ? '+' : '-'}{formatCurrency(Math.abs(item.amount))}
+          <Text
+            style={[
+              styles.transactionAmount,
+              item.type === 'income' ? styles.incomeAmount : styles.expenseAmount,
+            ]}>
+            {item.type === 'income' ? '+' : '-'}
+            {formatCurrency(Math.abs(item.amount))}
           </Text>
-          <Text style={styles.transactionDate}>
-            {new Date(item.date).toLocaleDateString()}
-          </Text>
+          <Text style={styles.transactionDate}>{new Date(item.date).toLocaleDateString()}</Text>
         </View>
       </View>
     </View>
@@ -90,16 +90,15 @@ const AccountDetailsScreen: React.FC = () => {
       <Card>
         <View style={styles.accountHeader}>
           <Text style={styles.accountName}>{account.name}</Text>
-          <Text style={styles.accountType}>
-            {t(`accounts.accountTypes.${account.type}`)}
-          </Text>
+          <Text style={styles.accountType}>{t(`accounts.accountTypes.${account.type}`)}</Text>
         </View>
         <View style={styles.balanceContainer}>
           <Text style={styles.balanceLabel}>{t('accounts.balance')}</Text>
-          <Text style={[
-            styles.balanceAmount,
-            account.balance < 0 ? styles.negativeBalance : styles.positiveBalance
-          ]}>
+          <Text
+            style={[
+              styles.balanceAmount,
+              account.balance < 0 ? styles.negativeBalance : styles.positiveBalance,
+            ]}>
             {formatCurrency(account.balance)}
           </Text>
         </View>
@@ -137,7 +136,7 @@ const AccountDetailsScreen: React.FC = () => {
           <VirtualizedList
             data={transactions}
             renderItem={renderTransaction}
-            keyExtractor={(item) => item.id}
+            keyExtractor={item => item.id}
             itemHeight={80}
             style={styles.transactionsList}
           />

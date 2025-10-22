@@ -1,4 +1,4 @@
-import { formatCurrency, formatNumber, parseCurrencyInput } from '@/utils/currency';
+import {formatCurrency, formatNumber, parseCurrencyInput} from '@/utils/currency';
 
 describe('Currency Utils', () => {
   describe('formatCurrency', () => {

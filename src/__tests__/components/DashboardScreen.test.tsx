@@ -1,8 +1,8 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react-native';
-import { Provider } from 'react-redux';
-import { NavigationContainer } from '@react-navigation/native';
-import { configureStore } from '@reduxjs/toolkit';
+import {render, screen} from '@testing-library/react-native';
+import {Provider} from 'react-redux';
+import {NavigationContainer} from '@react-navigation/native';
+import {configureStore} from '@reduxjs/toolkit';
 
 import DashboardScreen from '@/screens/dashboard/DashboardScreen';
 import accountsSlice from '@/store/slices/accountsSlice';
@@ -82,10 +82,8 @@ const createMockStore = (initialState = {}) => {
 const renderWithProviders = (component: React.ReactElement, store = createMockStore()) => {
   return render(
     <Provider store={store}>
-      <NavigationContainer>
-        {component}
-      </NavigationContainer>
-    </Provider>
+      <NavigationContainer>{component}</NavigationContainer>
+    </Provider>,
   );
 };
 
@@ -108,7 +106,7 @@ describe('DashboardScreen', () => {
         error: null,
       },
     });
-    
+
     renderWithProviders(<DashboardScreen />, loadingStore);
     expect(screen.getByText('common.loading')).toBeTruthy();
   });
@@ -131,7 +129,7 @@ describe('DashboardScreen', () => {
         error: null,
       },
     });
-    
+
     renderWithProviders(<DashboardScreen />, emptyTransactionsStore);
     expect(screen.getByText('dashboard.noTransactions')).toBeTruthy();
   });

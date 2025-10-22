@@ -1,9 +1,9 @@
-import { configureStore } from '@reduxjs/toolkit';
-import accountsSlice, { addAccount, updateAccountBalance } from '@/store/slices/accountsSlice';
-import transactionsSlice, { addTransaction } from '@/store/slices/transactionsSlice';
-import budgetsSlice, { updateBudgetSpent } from '@/store/slices/budgetsSlice';
-import { selectTotalBalance, selectMonthlyIncome } from '@/store/selectors';
-import { Account, Transaction, Budget } from '@/types';
+import {configureStore} from '@reduxjs/toolkit';
+import accountsSlice, {addAccount, updateAccountBalance} from '@/store/slices/accountsSlice';
+import transactionsSlice, {addTransaction} from '@/store/slices/transactionsSlice';
+import budgetsSlice, {updateBudgetSpent} from '@/store/slices/budgetsSlice';
+import {selectTotalBalance, selectMonthlyIncome} from '@/store/selectors';
+import {Account, Transaction, Budget} from '@/types';
 
 describe('Store Integration Tests', () => {
   const createTestStore = () => {
@@ -48,10 +48,12 @@ describe('Store Integration Tests', () => {
     store.dispatch(addTransaction(newTransaction));
 
     // Update account balance based on transaction
-    store.dispatch(updateAccountBalance({
-      accountId: 'test-account-1',
-      amount: newTransaction.amount,
-    }));
+    store.dispatch(
+      updateAccountBalance({
+        accountId: 'test-account-1',
+        amount: newTransaction.amount,
+      }),
+    );
 
     // Verify state is consistent
     state = store.getState();
@@ -120,10 +122,12 @@ describe('Store Integration Tests', () => {
     expect(state.budgets.budgets).toHaveLength(3); // Default budgets from initial state
 
     // Update budget spent amount
-    store.dispatch(updateBudgetSpent({
-      budgetId: '1', // Food budget from initial state
-      amount: 50,
-    }));
+    store.dispatch(
+      updateBudgetSpent({
+        budgetId: '1', // Food budget from initial state
+        amount: 50,
+      }),
+    );
 
     state = store.getState();
     const foodBudget = state.budgets.budgets.find(b => b.id === '1');
@@ -168,15 +172,17 @@ describe('Store Integration Tests', () => {
 
     transactions.forEach(tx => {
       store.dispatch(addTransaction(tx));
-      store.dispatch(updateAccountBalance({
-        accountId: tx.accountId,
-        amount: tx.amount,
-      }));
+      store.dispatch(
+        updateAccountBalance({
+          accountId: tx.accountId,
+          amount: tx.amount,
+        }),
+      );
     });
 
     const state = store.getState();
     const finalAccount = state.accounts.accounts.find(acc => acc.id === 'consistency-test');
-    
+
     // 500 + 200 - 50 = 650
     expect(finalAccount?.balance).toBe(650);
     expect(state.transactions.transactions).toHaveLength(5); // 3 initial + 2 new

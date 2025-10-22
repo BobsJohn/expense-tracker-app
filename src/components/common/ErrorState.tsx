@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { useTranslation } from 'react-i18next';
+import {View, Text, StyleSheet} from 'react-native';
+import {useTranslation} from 'react-i18next';
 import Button from '@/components/ui/Button';
 
 interface ErrorStateProps {
@@ -9,26 +9,16 @@ interface ErrorStateProps {
   showRetry?: boolean;
 }
 
-const ErrorState: React.FC<ErrorStateProps> = React.memo(({
-  message,
-  onRetry,
-  showRetry = true,
-}) => {
-  const { t } = useTranslation();
+const ErrorState: React.FC<ErrorStateProps> = React.memo(({message, onRetry, showRetry = true}) => {
+  const {t} = useTranslation();
 
   return (
     <View style={styles.container}>
       <Text style={styles.emoji}>😕</Text>
       <Text style={styles.title}>{t('common.error')}</Text>
-      <Text style={styles.message}>
-        {message || t('errors.networkError')}
-      </Text>
+      <Text style={styles.message}>{message || t('errors.networkError')}</Text>
       {showRetry && onRetry && (
-        <Button
-          title={t('common.retry')}
-          onPress={onRetry}
-          style={styles.retryButton}
-        />
+        <Button title={t('common.retry')} onPress={onRetry} style={styles.retryButton} />
       )}
     </View>
   );

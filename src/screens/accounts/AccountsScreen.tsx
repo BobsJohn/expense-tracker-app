@@ -1,22 +1,22 @@
-import React, { useMemo } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
-import { useTranslation } from 'react-i18next';
-import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { useAppSelector } from '@/hooks/useAppSelector';
-import { selectAccounts, selectAccountsByType } from '@/store/selectors';
+import React, {useMemo} from 'react';
+import {View, Text, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
+import {useTranslation} from 'react-i18next';
+import {useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {useAppSelector} from '@/hooks/useAppSelector';
+import {selectAccounts, selectAccountsByType} from '@/store/selectors';
 import Card from '@/components/ui/Card';
 import LoadingSpinner from '@/components/common/LoadingSpinner';
-import { formatCurrency } from '@/utils/currency';
-import { Account } from '@/types';
-import { RootStackParamList } from '@/types';
+import {formatCurrency} from '@/utils/currency';
+import {Account} from '@/types';
+import {RootStackParamList} from '@/types';
 
 type NavigationProp = StackNavigationProp<RootStackParamList, 'Accounts'>;
 
 const AccountsScreen: React.FC = () => {
-  const { t } = useTranslation();
+  const {t} = useTranslation();
   const navigation = useNavigation<NavigationProp>();
-  
+
   const accounts = useAppSelector(selectAccounts);
   const accountsByType = useAppSelector(selectAccountsByType);
   const isLoading = useAppSelector(state => state.accounts.loading);
@@ -34,48 +34,45 @@ const AccountsScreen: React.FC = () => {
   }
 
   const navigateToAccountDetails = (accountId: string) => {
-    navigation.navigate('AccountDetails', { accountId });
+    navigation.navigate('AccountDetails', {accountId});
   };
 
-  const renderAccount = ({ item }: { item: Account }) => (
-    <TouchableOpacity
-      onPress={() => navigateToAccountDetails(item.id)}
-      activeOpacity={0.7}
-    >
+  const renderAccount = ({item}: {item: Account}) => (
+    <TouchableOpacity onPress={() => navigateToAccountDetails(item.id)} activeOpacity={0.7}>
       <View style={styles.accountItem}>
         <View style={styles.accountInfo}>
           <Text style={styles.accountName}>{item.name}</Text>
-          <Text style={styles.accountType}>
-            {t(`accounts.accountTypes.${item.type}`)}
-          </Text>
+          <Text style={styles.accountType}>{t(`accounts.accountTypes.${item.type}`)}</Text>
         </View>
-        <Text style={[
-          styles.accountBalance,
-          item.balance < 0 ? styles.negativeBalance : styles.positiveBalance
-        ]}>
+        <Text
+          style={[
+            styles.accountBalance,
+            item.balance < 0 ? styles.negativeBalance : styles.positiveBalance,
+          ]}>
           {formatCurrency(item.balance)}
         </Text>
       </View>
     </TouchableOpacity>
   );
 
-  const renderSection = (section: { type: string; accounts: Account[]; total: number }) => (
+  const renderSection = (section: {type: string; accounts: Account[]; total: number}) => (
     <Card key={section.type} style={styles.sectionCard}>
       <View style={styles.sectionHeader}>
         <Text style={styles.sectionTitle}>
           {t(`accounts.accountTypes.${section.type}`)} Accounts
         </Text>
-        <Text style={[
-          styles.sectionTotal,
-          section.total < 0 ? styles.negativeBalance : styles.positiveBalance
-        ]}>
+        <Text
+          style={[
+            styles.sectionTotal,
+            section.total < 0 ? styles.negativeBalance : styles.positiveBalance,
+          ]}>
           {formatCurrency(section.total)}
         </Text>
       </View>
       <FlatList
         data={section.accounts}
         renderItem={renderAccount}
-        keyExtractor={(item) => item.id}
+        keyExtractor={item => item.id}
         scrollEnabled={false}
         showsVerticalScrollIndicator={false}
       />
@@ -86,18 +83,19 @@ const AccountsScreen: React.FC = () => {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>{t('accounts.title')}</Text>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.addButton}
-          onPress={() => {/* TODO: Navigate to add account */}}
-        >
+          onPress={() => {
+            /* TODO: Navigate to add account */
+          }}>
           <Text style={styles.addButtonText}>+</Text>
         </TouchableOpacity>
       </View>
 
       <FlatList
         data={accountSections}
-        renderItem={({ item }) => renderSection(item)}
-        keyExtractor={(item) => item.type}
+        renderItem={({item}) => renderSection(item)}
+        keyExtractor={item => item.type}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.listContainer}
       />
