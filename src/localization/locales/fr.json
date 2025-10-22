@@ -1,0 +1,101 @@
+{
+  "common": {
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "retry": "Réessayer",
+    "cancel": "Annuler",
+    "save": "Sauvegarder",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "add": "Ajouter",
+    "back": "Retour",
+    "done": "Terminé",
+    "currency": "USD"
+  },
+  "navigation": {
+    "dashboard": "Tableau de Bord",
+    "accounts": "Comptes",
+    "budgets": "Budgets",
+    "transactions": "Transactions",
+    "settings": "Paramètres"
+  },
+  "dashboard": {
+    "title": "Aperçu Financier",
+    "totalBalance": "Solde Total",
+    "monthlyIncome": "Revenus Mensuels",
+    "monthlyExpenses": "Dépenses Mensuelles",
+    "recentTransactions": "Transactions Récentes",
+    "budgetOverview": "Aperçu du Budget",
+    "noTransactions": "Aucune transaction récente"
+  },
+  "accounts": {
+    "title": "Comptes",
+    "balance": "Solde",
+    "addAccount": "Ajouter un Compte",
+    "accountDetails": "Détails du Compte",
+    "accountTypes": {
+      "checking": "Courant",
+      "savings": "Épargne",
+      "credit": "Carte de Crédit",
+      "investment": "Investissement"
+    }
+  },
+  "transactions": {
+    "title": "Transactions",
+    "addTransaction": "Ajouter Transaction",
+    "income": "Revenu",
+    "expense": "Dépense",
+    "amount": "Montant",
+    "description": "Description",
+    "category": "Catégorie",
+    "date": "Date",
+    "noTransactions": "Aucune transaction trouvée"
+  },
+  "budgets": {
+    "title": "Budgets",
+    "addBudget": "Ajouter Budget",
+    "budgetDetails": "Détails du Budget",
+    "budgeted": "Budgété",
+    "spent": "Dépensé",
+    "remaining": "Restant",
+    "overBudget": "Hors Budget",
+    "progress": "Progrès",
+    "categories": {
+      "food": "Nourriture",
+      "transportation": "Transport",
+      "entertainment": "Divertissement",
+      "utilities": "Services",
+      "healthcare": "Santé",
+      "shopping": "Achats",
+      "other": "Autre"
+    }
+  },
+  "settings": {
+    "title": "Paramètres",
+    "language": "Langue",
+    "theme": "Thème",
+    "currency": "Devise",
+    "notifications": "Notifications",
+    "backup": "Sauvegarde",
+    "about": "À Propos"
+  },
+  "errors": {
+    "networkError": "Erreur de connexion réseau",
+    "invalidAmount": "Montant invalide saisi",
+    "requiredField": "Ce champ est obligatoire",
+    "accountNotFound": "Compte non trouvé",
+    "budgetNotFound": "Budget non trouvé",
+    "transactionFailed": "Échec de sauvegarde de la transaction"
+  },
+  "success": {
+    "accountCreated": "Compte créé avec succès",
+    "accountUpdated": "Compte mis à jour avec succès",
+    "accountDeleted": "Compte supprimé avec succès",
+    "transactionCreated": "Transaction créée avec succès",
+    "transactionUpdated": "Transaction mise à jour avec succès",
+    "transactionDeleted": "Transaction supprimée avec succès",
+    "budgetCreated": "Budget créé avec succès",
+    "budgetUpdated": "Budget mis à jour avec succès",
+    "budgetDeleted": "Budget supprimé avec succès"
+  }
+}

@@ -1,0 +1,101 @@
+{
+  "common": {
+    "loading": "Cargando...",
+    "error": "Error",
+    "retry": "Reintentar",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "add": "Añadir",
+    "back": "Atrás",
+    "done": "Listo",
+    "currency": "USD"
+  },
+  "navigation": {
+    "dashboard": "Panel",
+    "accounts": "Cuentas",
+    "budgets": "Presupuestos",
+    "transactions": "Transacciones",
+    "settings": "Configuración"
+  },
+  "dashboard": {
+    "title": "Resumen Financiero",
+    "totalBalance": "Saldo Total",
+    "monthlyIncome": "Ingresos Mensuales",
+    "monthlyExpenses": "Gastos Mensuales",
+    "recentTransactions": "Transacciones Recientes",
+    "budgetOverview": "Resumen de Presupuesto",
+    "noTransactions": "No hay transacciones recientes"
+  },
+  "accounts": {
+    "title": "Cuentas",
+    "balance": "Saldo",
+    "addAccount": "Añadir Cuenta",
+    "accountDetails": "Detalles de Cuenta",
+    "accountTypes": {
+      "checking": "Corriente",
+      "savings": "Ahorros",
+      "credit": "Tarjeta de Crédito",
+      "investment": "Inversión"
+    }
+  },
+  "transactions": {
+    "title": "Transacciones",
+    "addTransaction": "Añadir Transacción",
+    "income": "Ingreso",
+    "expense": "Gasto",
+    "amount": "Cantidad",
+    "description": "Descripción",
+    "category": "Categoría",
+    "date": "Fecha",
+    "noTransactions": "No se encontraron transacciones"
+  },
+  "budgets": {
+    "title": "Presupuestos",
+    "addBudget": "Añadir Presupuesto",
+    "budgetDetails": "Detalles del Presupuesto",
+    "budgeted": "Presupuestado",
+    "spent": "Gastado",
+    "remaining": "Restante",
+    "overBudget": "Excedido",
+    "progress": "Progreso",
+    "categories": {
+      "food": "Comida",
+      "transportation": "Transporte",
+      "entertainment": "Entretenimiento",
+      "utilities": "Servicios",
+      "healthcare": "Salud",
+      "shopping": "Compras",
+      "other": "Otro"
+    }
+  },
+  "settings": {
+    "title": "Configuración",
+    "language": "Idioma",
+    "theme": "Tema",
+    "currency": "Moneda",
+    "notifications": "Notificaciones",
+    "backup": "Copia de Seguridad",
+    "about": "Acerca de"
+  },
+  "errors": {
+    "networkError": "Error de conexión de red",
+    "invalidAmount": "Cantidad inválida ingresada",
+    "requiredField": "Este campo es obligatorio",
+    "accountNotFound": "Cuenta no encontrada",
+    "budgetNotFound": "Presupuesto no encontrado",
+    "transactionFailed": "Falló al guardar la transacción"
+  },
+  "success": {
+    "accountCreated": "Cuenta creada exitosamente",
+    "accountUpdated": "Cuenta actualizada exitosamente",
+    "accountDeleted": "Cuenta eliminada exitosamente",
+    "transactionCreated": "Transacción creada exitosamente",
+    "transactionUpdated": "Transacción actualizada exitosamente",
+    "transactionDeleted": "Transacción eliminada exitosamente",
+    "budgetCreated": "Presupuesto creado exitosamente",
+    "budgetUpdated": "Presupuesto actualizado exitosamente",
+    "budgetDeleted": "Presupuesto eliminado exitosamente"
+  }
+}
