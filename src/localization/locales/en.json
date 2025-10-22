@@ -77,7 +77,32 @@
     "currency": "Currency",
     "notifications": "Notifications",
     "backup": "Backup & Sync",
-    "about": "About"
+    "about": "About",
+    "export": "Export Data"
+  },
+  "export": {
+    "title": "Export Data",
+    "format": "Export Format",
+    "dataTypes": "Data to Export",
+    "includeTransactions": "Include Transactions",
+    "includeBudgets": "Include Budgets",
+    "dateRange": "Date Range",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "accounts": "Accounts",
+    "categories": "Categories",
+    "selectAll": "Select All",
+    "deselectAll": "Deselect All",
+    "exportData": "Export Data",
+    "exporting": "Exporting...",
+    "share": "Share",
+    "shareTitle": "Financial Data Export",
+    "success": "Export Successful",
+    "error": "Export Error",
+    "exportSuccessMessage": "Your financial data has been exported successfully. Would you like to share the file?",
+    "exportFailedMessage": "Failed to export data. Please try again.",
+    "selectDataTypeError": "Please select at least one data type to export (Transactions or Budgets).",
+    "unknownError": "An unknown error occurred during export."
   },
   "errors": {
     "networkError": "Network connection error",

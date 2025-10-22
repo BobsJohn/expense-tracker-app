@@ -77,7 +77,32 @@
     "currency": "Moneda",
     "notifications": "Notificaciones",
     "backup": "Copia de Seguridad",
-    "about": "Acerca de"
+    "about": "Acerca de",
+    "export": "Exportar datos"
+  },
+  "export": {
+    "title": "Exportar datos",
+    "format": "Formato de exportación",
+    "dataTypes": "Datos a exportar",
+    "includeTransactions": "Incluir transacciones",
+    "includeBudgets": "Incluir presupuestos",
+    "dateRange": "Rango de fechas",
+    "startDate": "Fecha de inicio",
+    "endDate": "Fecha de fin",
+    "accounts": "Cuentas",
+    "categories": "Categorías",
+    "selectAll": "Seleccionar todo",
+    "deselectAll": "Deseleccionar todo",
+    "exportData": "Exportar datos",
+    "exporting": "Exportando...",
+    "share": "Compartir",
+    "shareTitle": "Exportación de datos financieros",
+    "success": "Exportación exitosa",
+    "error": "Error de exportación",
+    "exportSuccessMessage": "Sus datos financieros se han exportado correctamente. ¿Desea compartir el archivo?",
+    "exportFailedMessage": "Error al exportar los datos. Por favor, inténtelo de nuevo.",
+    "selectDataTypeError": "Seleccione al menos un tipo de datos para exportar (Transacciones o Presupuestos).",
+    "unknownError": "Se produjo un error desconocido durante la exportación."
   },
   "errors": {
     "networkError": "Error de conexión de red",

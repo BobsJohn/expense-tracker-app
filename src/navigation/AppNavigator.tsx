@@ -8,9 +8,10 @@ import { useTranslation } from 'react-i18next';
 import DashboardScreen from '@/screens/dashboard/DashboardScreen';
 import AccountsScreen from '@/screens/accounts/AccountsScreen';
 import AccountDetailsScreen from '@/screens/accounts/AccountDetailsScreen';
+import SettingsScreen from '@/screens/settings/SettingsScreen';
+import ExportScreen from '@/screens/export/ExportScreen';
 // import BudgetsScreen from '@/screens/budgets/BudgetsScreen';
 // import TransactionsScreen from '@/screens/transactions/TransactionsScreen';
-// import SettingsScreen from '@/screens/settings/SettingsScreen';
 
 import { BottomTabParamList, RootStackParamList } from '@/types';
 
@@ -41,7 +42,6 @@ const placeholderStyles = StyleSheet.create({
 
 const BudgetsScreen = () => <PlaceholderScreen title="Budgets" />;
 const TransactionsScreen = () => <PlaceholderScreen title="Transactions" />;
-const SettingsScreen = () => <PlaceholderScreen title="Settings" />;
 
 const MainTabs: React.FC = () => {
   const { t } = useTranslation();
@@ -108,6 +108,8 @@ const MainTabs: React.FC = () => {
 };
 
 const AppNavigator: React.FC = () => {
+  const { t } = useTranslation();
+  
   return (
     <NavigationContainer>
       <Stack.Navigator>
@@ -120,6 +122,11 @@ const AppNavigator: React.FC = () => {
           name="AccountDetails"
           component={AccountDetailsScreen}
           options={{ title: 'Account Details' }}
+        />
+        <Stack.Screen 
+          name="Export"
+          component={ExportScreen}
+          options={{ title: t('export.title') }}
         />
       </Stack.Navigator>
     </NavigationContainer>
