@@ -25,6 +25,51 @@ export interface Budget {
   currency: string;
 }
 
+export type TimeGranularity = 'daily' | 'weekly' | 'monthly' | 'yearly';
+
+export interface ReportFilters {
+  startDate: Date;
+  endDate: Date;
+  granularity: TimeGranularity;
+}
+
+export interface PeriodReportDatum {
+  periodKey: string;
+  label: string;
+  startDate: string;
+  endDate: string;
+  income: number;
+  expense: number;
+  transactions: Transaction[];
+}
+
+export interface TrendReportDatum {
+  periodKey: string;
+  label: string;
+  value: number;
+  transactions: Transaction[];
+}
+
+export interface CategoryReportDatum {
+  category: string;
+  total: number;
+  transactions: Transaction[];
+}
+
+export interface AccountReportDatum {
+  accountId: string;
+  accountName: string;
+  balance: number;
+  transactions: Transaction[];
+}
+
+export interface ReportSummary {
+  totalIncome: number;
+  totalExpense: number;
+  netBalance: number;
+  topCategories: CategoryReportDatum[];
+}
+
 export interface AppState {
   accounts: Account[];
   transactions: Transaction[];
@@ -47,6 +92,7 @@ export type RootStackParamList = {
 
 export type BottomTabParamList = {
   Dashboard: undefined;
+  Reports: undefined;
   Accounts: undefined;
   Budgets: undefined;
   Transactions: undefined;

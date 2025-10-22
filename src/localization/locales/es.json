@@ -14,6 +14,7 @@
   },
   "navigation": {
     "dashboard": "Panel",
+    "reports": "Informes",
     "accounts": "Cuentas",
     "budgets": "Presupuestos",
     "transactions": "Transacciones",
@@ -27,6 +28,30 @@
     "recentTransactions": "Transacciones Recientes",
     "budgetOverview": "Resumen de Presupuesto",
     "noTransactions": "No hay transacciones recientes"
+  },
+  "reports": {
+    "title": "Informes y Estadísticas",
+    "filtersTitle": "Filtrar por periodo",
+    "startDate": "Fecha de inicio",
+    "endDate": "Fecha de fin",
+    "summaryTitle": "Resumen",
+    "totalIncome": "Ingresos totales",
+    "totalExpense": "Gastos totales",
+    "netBalance": "Balance neto",
+    "topCategories": "Categorías principales",
+    "incomeVsExpense": "Ingresos vs Gastos",
+    "spendingTrend": "Tendencia de gasto",
+    "categoryDistribution": "Distribución por categoría",
+    "accountOverview": "Resumen de saldos de cuentas",
+    "empty": "No hay datos disponibles para los filtros seleccionados.",
+    "drilldownTitle": "Detalles de {{label}}",
+    "clearDrilldown": "Limpiar",
+    "ranges": {
+      "daily": "Diario",
+      "weekly": "Semanal",
+      "monthly": "Mensual",
+      "yearly": "Anual"
+    }
   },
   "accounts": {
     "title": "Cuentas",

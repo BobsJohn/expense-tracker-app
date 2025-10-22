@@ -14,6 +14,7 @@
   },
   "navigation": {
     "dashboard": "Tableau de Bord",
+    "reports": "Rapports",
     "accounts": "Comptes",
     "budgets": "Budgets",
     "transactions": "Transactions",
@@ -27,6 +28,30 @@
     "recentTransactions": "Transactions Récentes",
     "budgetOverview": "Aperçu du Budget",
     "noTransactions": "Aucune transaction récente"
+  },
+  "reports": {
+    "title": "Rapports et Analyses",
+    "filtersTitle": "Filtrer par période",
+    "startDate": "Date de début",
+    "endDate": "Date de fin",
+    "summaryTitle": "Synthèse",
+    "totalIncome": "Revenus totaux",
+    "totalExpense": "Dépenses totales",
+    "netBalance": "Solde net",
+    "topCategories": "Catégories principales",
+    "incomeVsExpense": "Revenus vs Dépenses",
+    "spendingTrend": "Tendance des dépenses",
+    "categoryDistribution": "Répartition par catégorie",
+    "accountOverview": "Vue d'ensemble des soldes",
+    "empty": "Aucune donnée disponible pour les filtres sélectionnés.",
+    "drilldownTitle": "Détails pour {{label}}",
+    "clearDrilldown": "Effacer",
+    "ranges": {
+      "daily": "Quotidien",
+      "weekly": "Hebdomadaire",
+      "monthly": "Mensuel",
+      "yearly": "Annuel"
+    }
   },
   "accounts": {
     "title": "Comptes",

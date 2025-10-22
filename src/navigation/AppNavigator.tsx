@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import DashboardScreen from '@/screens/dashboard/DashboardScreen';
 import AccountsScreen from '@/screens/accounts/AccountsScreen';
 import AccountDetailsScreen from '@/screens/accounts/AccountDetailsScreen';
+import ReportsScreen from '@/screens/reports/ReportsScreen';
 import SettingsScreen from '@/screens/settings/SettingsScreen';
 import ExportScreen from '@/screens/export/ExportScreen';
 // import BudgetsScreen from '@/screens/budgets/BudgetsScreen';
@@ -71,6 +72,14 @@ const MainTabs: React.FC = () => {
         component={DashboardScreen}
         options={{
           title: t('navigation.dashboard'),
+          headerShown: false,
+        }}
+      />
+      <Tab.Screen
+        name="Reports"
+        component={ReportsScreen}
+        options={{
+          title: t('navigation.reports'),
           headerShown: false,
         }}
       />

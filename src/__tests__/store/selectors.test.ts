@@ -6,9 +6,15 @@ import {
   selectMonthlyExpenses,
   selectBudgetProgress,
   selectSpendingByCategory,
+  selectTransactionsByDateRange,
+  selectIncomeExpenseByPeriod,
+  selectSpendingTrendReport,
+  selectCategoryDistributionReport,
+  selectAccountReports,
+  selectReportSummary,
 } from '@/store/selectors';
 import { RootState } from '@/store';
-import { Account, Transaction, Budget } from '@/types';
+import { Account, Transaction, Budget, ReportFilters } from '@/types';
 
 describe('Store Selectors', () => {
   const mockAccounts: Account[] = [
@@ -61,6 +67,15 @@ describe('Store Selectors', () => {
       category: 'Entertainment',
       description: 'Movie tickets',
       date: '2024-01-20',
+      type: 'expense',
+    },
+    {
+      id: '4',
+      accountId: '1',
+      amount: -75,
+      category: 'Utilities',
+      description: 'Electric bill',
+      date: '2023-12-28',
       type: 'expense',
     },
   ];
@@ -204,6 +219,61 @@ describe('Store Selectors', () => {
       });
       
       jest.restoreAllMocks();
+    });
+  });
+
+  describe('Report selectors', () => {
+    const reportFilters: ReportFilters = {
+      startDate: new Date('2024-01-01'),
+      endDate: new Date('2024-01-31'),
+      granularity: 'weekly',
+    };
+
+    it('should return transactions constrained to the date range', () => {
+      const result = selectTransactionsByDateRange(mockState, reportFilters);
+      expect(result).toHaveLength(3);
+      expect(result.every((tx) => tx.date.startsWith('2024-01'))).toBe(true);
+    });
+
+    it('should aggregate income and expenses by the selected period', () => {
+      const result = selectIncomeExpenseByPeriod(mockState, reportFilters);
+      expect(result).toHaveLength(2);
+      expect(result[0]).toMatchObject({ income: 2000, expense: 0 });
+      expect(result[1]).toMatchObject({ income: 0, expense: 150 });
+    });
+
+    it('should build a spending trend dataset from period data', () => {
+      const result = selectSpendingTrendReport(mockState, reportFilters);
+      expect(result).toHaveLength(2);
+      expect(result[0].value).toBe(0);
+      expect(result[1].value).toBe(150);
+    });
+
+    it('should aggregate expenses by category within the date range', () => {
+      const result = selectCategoryDistributionReport(mockState, reportFilters);
+      expect(result).toHaveLength(2);
+      expect(result[0]).toMatchObject({ category: 'Food', total: 100 });
+      expect(result[1]).toMatchObject({ category: 'Entertainment', total: 50 });
+    });
+
+    it('should provide account reports with related transactions', () => {
+      const result = selectAccountReports(mockState, reportFilters);
+      expect(result).toHaveLength(3);
+      const checking = result.find((report) => report.accountId === '1');
+      const savings = result.find((report) => report.accountId === '2');
+      expect(checking?.transactions).toHaveLength(2);
+      expect(savings?.transactions).toHaveLength(1);
+    });
+
+    it('should calculate summary metrics for reports', () => {
+      const result = selectReportSummary(mockState, reportFilters);
+      expect(result.totalIncome).toBe(2000);
+      expect(result.totalExpense).toBe(150);
+      expect(result.netBalance).toBe(1850);
+      expect(result.topCategories.map((item) => item.category)).toEqual([
+        'Food',
+        'Entertainment',
+      ]);
     });
   });
 });
