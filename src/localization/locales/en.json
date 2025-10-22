@@ -1,0 +1,101 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "retry": "Retry",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "back": "Back",
+    "done": "Done",
+    "currency": "USD"
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "accounts": "Accounts",
+    "budgets": "Budgets",
+    "transactions": "Transactions",
+    "settings": "Settings"
+  },
+  "dashboard": {
+    "title": "Financial Overview",
+    "totalBalance": "Total Balance",
+    "monthlyIncome": "Monthly Income",
+    "monthlyExpenses": "Monthly Expenses",
+    "recentTransactions": "Recent Transactions",
+    "budgetOverview": "Budget Overview",
+    "noTransactions": "No recent transactions"
+  },
+  "accounts": {
+    "title": "Accounts",
+    "balance": "Balance",
+    "addAccount": "Add Account",
+    "accountDetails": "Account Details",
+    "accountTypes": {
+      "checking": "Checking",
+      "savings": "Savings",
+      "credit": "Credit Card",
+      "investment": "Investment"
+    }
+  },
+  "transactions": {
+    "title": "Transactions",
+    "addTransaction": "Add Transaction",
+    "income": "Income",
+    "expense": "Expense",
+    "amount": "Amount",
+    "description": "Description",
+    "category": "Category",
+    "date": "Date",
+    "noTransactions": "No transactions found"
+  },
+  "budgets": {
+    "title": "Budgets",
+    "addBudget": "Add Budget",
+    "budgetDetails": "Budget Details",
+    "budgeted": "Budgeted",
+    "spent": "Spent",
+    "remaining": "Remaining",
+    "overBudget": "Over Budget",
+    "progress": "Progress",
+    "categories": {
+      "food": "Food",
+      "transportation": "Transportation",
+      "entertainment": "Entertainment",
+      "utilities": "Utilities",
+      "healthcare": "Healthcare",
+      "shopping": "Shopping",
+      "other": "Other"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "theme": "Theme",
+    "currency": "Currency",
+    "notifications": "Notifications",
+    "backup": "Backup & Sync",
+    "about": "About"
+  },
+  "errors": {
+    "networkError": "Network connection error",
+    "invalidAmount": "Invalid amount entered",
+    "requiredField": "This field is required",
+    "accountNotFound": "Account not found",
+    "budgetNotFound": "Budget not found",
+    "transactionFailed": "Transaction failed to save"
+  },
+  "success": {
+    "accountCreated": "Account created successfully",
+    "accountUpdated": "Account updated successfully",
+    "accountDeleted": "Account deleted successfully",
+    "transactionCreated": "Transaction created successfully",
+    "transactionUpdated": "Transaction updated successfully",
+    "transactionDeleted": "Transaction deleted successfully",
+    "budgetCreated": "Budget created successfully",
+    "budgetUpdated": "Budget updated successfully",
+    "budgetDeleted": "Budget deleted successfully"
+  }
+}
