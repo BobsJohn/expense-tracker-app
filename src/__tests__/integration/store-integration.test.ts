@@ -3,7 +3,8 @@ import accountsSlice, {addAccount, updateAccountBalance} from '@/store/slices/ac
 import transactionsSlice, {addTransaction} from '@/store/slices/transactionsSlice';
 import budgetsSlice, {updateBudgetSpent} from '@/store/slices/budgetsSlice';
 import {selectTotalBalance, selectMonthlyIncome} from '@/store/selectors';
-import {Account, Transaction, Budget} from '@/types';
+import {executeTransfer} from '@/store/actions/transfers';
+import {Account, Transaction} from '@/types';
 
 describe('Store Integration Tests', () => {
   const createTestStore = () => {
@@ -20,19 +21,31 @@ describe('Store Integration Tests', () => {
     const store = createTestStore();
 
     // Add an account
+    const timestamp = '2024-01-01T00:00:00.000Z';
     const newAccount: Account = {
       id: 'test-account-1',
       name: 'Test Checking',
       type: 'checking',
       balance: 1000,
       currency: 'USD',
+      createdAt: timestamp,
+      updatedAt: timestamp,
     };
 
     store.dispatch(addAccount(newAccount));
 
     // Verify account was added
     let state = store.getState();
-    expect(state.accounts.accounts).toContainEqual(newAccount);
+    const storedAccount = state.accounts.accounts.find(acc => acc.id === newAccount.id);
+    expect(storedAccount).toMatchObject({
+      id: newAccount.id,
+      name: newAccount.name,
+      type: newAccount.type,
+      balance: newAccount.balance,
+      currency: newAccount.currency,
+    });
+    expect(storedAccount?.createdAt).toBeDefined();
+    expect(storedAccount?.updatedAt).toBeDefined();
 
     // Add a transaction
     const newTransaction: Transaction = {
@@ -68,12 +81,15 @@ describe('Store Integration Tests', () => {
     const store = createTestStore();
 
     // Set up initial state
+    const baseTimestamp = '2024-01-01T00:00:00.000Z';
     const account1: Account = {
       id: 'acc-1',
       name: 'Checking',
       type: 'checking',
       balance: 1000,
       currency: 'USD',
+      createdAt: baseTimestamp,
+      updatedAt: baseTimestamp,
     };
 
     const account2: Account = {
@@ -82,6 +98,8 @@ describe('Store Integration Tests', () => {
       type: 'savings',
       balance: 5000,
       currency: 'USD',
+      createdAt: baseTimestamp,
+      updatedAt: baseTimestamp,
     };
 
     store.dispatch(addAccount(account1));
@@ -114,6 +132,84 @@ describe('Store Integration Tests', () => {
     expect(monthlyIncome).toBe(2000);
   });
 
+  it('should execute transfers atomically across accounts and transactions', () => {
+    const store = createTestStore();
+
+    const timestamp = '2024-02-01T00:00:00.000Z';
+
+    const sourceAccount: Account = {
+      id: 'transfer-source',
+      name: 'Source',
+      type: 'checking',
+      balance: 500,
+      currency: 'USD',
+      createdAt: timestamp,
+      updatedAt: timestamp,
+    };
+
+    const destinationAccount: Account = {
+      id: 'transfer-destination',
+      name: 'Destination',
+      type: 'savings',
+      balance: 250,
+      currency: 'USD',
+      createdAt: timestamp,
+      updatedAt: timestamp,
+    };
+
+    store.dispatch(addAccount(sourceAccount));
+    store.dispatch(addAccount(destinationAccount));
+
+    const transferTimestamp = '2024-02-15T12:00:00.000Z';
+
+    store.dispatch(
+      executeTransfer({
+        transferId: 'transfer-test-1',
+        sourceAccountId: sourceAccount.id,
+        sourceAccountName: sourceAccount.name,
+        destinationAccountId: destinationAccount.id,
+        destinationAccountName: destinationAccount.name,
+        amount: 150,
+        timestamp: transferTimestamp,
+        memo: 'Monthly savings',
+      }),
+    );
+
+    const state = store.getState();
+    const updatedSource = state.accounts.accounts.find(acc => acc.id === sourceAccount.id);
+    const updatedDestination = state.accounts.accounts.find(acc => acc.id === destinationAccount.id);
+
+    expect(updatedSource?.balance).toBe(350);
+    expect(updatedDestination?.balance).toBe(400);
+
+    const transferTransactions = state.transactions.transactions.filter(
+      tx => tx.transferId === 'transfer-test-1',
+    );
+
+    expect(transferTransactions).toHaveLength(2);
+
+    const outgoing = transferTransactions.find(tx => tx.accountId === sourceAccount.id);
+    const incoming = transferTransactions.find(tx => tx.accountId === destinationAccount.id);
+
+    expect(outgoing).toMatchObject({
+      accountId: sourceAccount.id,
+      amount: -150,
+      type: 'expense',
+      relatedAccountId: destinationAccount.id,
+      memo: 'Monthly savings',
+    });
+    expect(outgoing?.date).toBe(transferTimestamp);
+
+    expect(incoming).toMatchObject({
+      accountId: destinationAccount.id,
+      amount: 150,
+      type: 'income',
+      relatedAccountId: sourceAccount.id,
+      memo: 'Monthly savings',
+    });
+    expect(incoming?.date).toBe(transferTimestamp);
+  });
+
   it('should handle budget updates correctly', () => {
     const store = createTestStore();
 
@@ -138,12 +234,15 @@ describe('Store Integration Tests', () => {
     const store = createTestStore();
 
     // Perform multiple operations
+    const timestamp = '2024-01-01T00:00:00.000Z';
     const account: Account = {
       id: 'consistency-test',
       name: 'Test Account',
       type: 'checking',
       balance: 500,
       currency: 'USD',
+      createdAt: timestamp,
+      updatedAt: timestamp,
     };
 
     store.dispatch(addAccount(account));

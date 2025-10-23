@@ -1,5 +1,6 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {Account} from '@/types';
+import {executeTransfer} from '@/store/actions/transfers';
 
 interface AccountsState {
   accounts: Account[];
@@ -15,6 +16,8 @@ const initialState: AccountsState = {
       type: 'checking',
       balance: 2500.0,
       currency: 'USD',
+      createdAt: '2023-12-01T08:00:00Z',
+      updatedAt: '2024-01-15T08:00:00Z',
     },
     {
       id: '2',
@@ -22,6 +25,8 @@ const initialState: AccountsState = {
       type: 'savings',
       balance: 15000.0,
       currency: 'USD',
+      createdAt: '2023-10-10T08:00:00Z',
+      updatedAt: '2024-01-10T08:00:00Z',
     },
     {
       id: '3',
@@ -29,6 +34,8 @@ const initialState: AccountsState = {
       type: 'credit',
       balance: -850.0,
       currency: 'USD',
+      createdAt: '2023-11-05T08:00:00Z',
+      updatedAt: '2024-01-18T08:00:00Z',
     },
   ],
   loading: false,
@@ -46,12 +53,20 @@ const accountsSlice = createSlice({
       state.error = action.payload;
     },
     addAccount: (state, action: PayloadAction<Account>) => {
-      state.accounts.push(action.payload);
+      const now = new Date().toISOString();
+      state.accounts.push({
+        ...action.payload,
+        createdAt: action.payload.createdAt ?? now,
+        updatedAt: action.payload.updatedAt ?? now,
+      });
     },
     updateAccount: (state, action: PayloadAction<Account>) => {
       const index = state.accounts.findIndex(acc => acc.id === action.payload.id);
       if (index !== -1) {
-        state.accounts[index] = action.payload;
+        state.accounts[index] = {
+          ...action.payload,
+          updatedAt: action.payload.updatedAt ?? new Date().toISOString(),
+        };
       }
     },
     deleteAccount: (state, action: PayloadAction<string>) => {
@@ -61,8 +76,30 @@ const accountsSlice = createSlice({
       const account = state.accounts.find(acc => acc.id === action.payload.accountId);
       if (account) {
         account.balance += action.payload.amount;
+        account.updatedAt = new Date().toISOString();
       }
     },
+  },
+  extraReducers: builder => {
+    builder.addCase(executeTransfer, (state, action) => {
+      const {sourceAccountId, destinationAccountId, amount, timestamp} = action.payload;
+      if (amount <= 0) {
+        return;
+      }
+
+      const sourceAccount = state.accounts.find(acc => acc.id === sourceAccountId);
+      const destinationAccount = state.accounts.find(acc => acc.id === destinationAccountId);
+
+      if (sourceAccount) {
+        sourceAccount.balance -= amount;
+        sourceAccount.updatedAt = timestamp;
+      }
+
+      if (destinationAccount) {
+        destinationAccount.balance += amount;
+        destinationAccount.updatedAt = timestamp;
+      }
+    });
   },
 });
 

@@ -4,6 +4,8 @@ export interface Account {
   type: 'checking' | 'savings' | 'credit' | 'investment';
   balance: number;
   currency: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface Transaction {
@@ -14,6 +16,9 @@ export interface Transaction {
   description: string;
   date: string;
   type: 'income' | 'expense';
+  memo?: string;
+  transferId?: string;
+  relatedAccountId?: string;
 }
 
 export interface Budget {

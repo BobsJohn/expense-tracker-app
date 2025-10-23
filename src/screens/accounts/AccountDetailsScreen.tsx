@@ -1,28 +1,46 @@
-import React, {useMemo} from 'react';
-import {View, Text, StyleSheet, ScrollView} from 'react-native';
-import {useRoute, RouteProp} from '@react-navigation/native';
+import React, {useMemo, useState} from 'react';
+import {View, Text, StyleSheet, ScrollView, Alert} from 'react-native';
+import {useRoute, RouteProp, useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
 import {useTranslation} from 'react-i18next';
+import {useDispatch} from 'react-redux';
+import Toast from 'react-native-toast-message';
+
 import {useAppSelector} from '@/hooks/useAppSelector';
-import {selectAccountById, selectTransactionsByAccount} from '@/store/selectors';
+import {selectAccountById, selectAccounts, selectTransactionsByAccount} from '@/store/selectors';
 import Card from '@/components/ui/Card';
 import VirtualizedList from '@/components/ui/VirtualizedList';
 import LoadingSpinner from '@/components/common/LoadingSpinner';
 import ErrorState from '@/components/common/ErrorState';
+import Button from '@/components/ui/Button';
+import AccountFormModal from './components/AccountFormModal';
+import TransferModal from './components/TransferModal';
 import {formatCurrency} from '@/utils/currency';
-import {Transaction} from '@/types';
-import {RootStackParamList} from '@/types';
+import {Transaction, RootStackParamList} from '@/types';
+import {deleteAccount} from '@/store/slices/accountsSlice';
+import {deleteTransactionsByAccount} from '@/store/slices/transactionsSlice';
+import {AppDispatch} from '@/store';
+import {triggerHapticFeedback} from '@/utils/haptics';
 
 type AccountDetailsRouteProp = RouteProp<RootStackParamList, 'AccountDetails'>;
+type AccountDetailsNavigationProp = StackNavigationProp<RootStackParamList, 'AccountDetails'>;
 
 const AccountDetailsScreen: React.FC = () => {
   const {t} = useTranslation();
   const route = useRoute<AccountDetailsRouteProp>();
+  const navigation = useNavigation<AccountDetailsNavigationProp>();
+  const dispatch = useDispatch<AppDispatch>();
   const {accountId} = route.params;
 
   const account = useAppSelector(state => selectAccountById(state, accountId));
   const transactions = useAppSelector(state => selectTransactionsByAccount(state, accountId));
   const isLoading = useAppSelector(state => state.accounts.loading || state.transactions.loading);
   const error = useAppSelector(state => state.accounts.error || state.transactions.error);
+  const accountsCount = useAppSelector(selectAccounts).length;
+  const canTransfer = accountsCount > 1;
+
+  const [accountModalVisible, setAccountModalVisible] = useState(false);
+  const [transferModalVisible, setTransferModalVisible] = useState(false);
 
   const accountStats = useMemo(() => {
     if (!transactions.length) {
@@ -56,6 +74,7 @@ const AccountDetailsScreen: React.FC = () => {
         <View style={styles.transactionInfo}>
           <Text style={styles.transactionDescription}>{item.description}</Text>
           <Text style={styles.transactionCategory}>{item.category}</Text>
+          {item.memo ? <Text style={styles.transactionMemo}>{item.memo}</Text> : null}
         </View>
         <View style={styles.transactionRight}>
           <Text
@@ -63,14 +82,57 @@ const AccountDetailsScreen: React.FC = () => {
               styles.transactionAmount,
               item.type === 'income' ? styles.incomeAmount : styles.expenseAmount,
             ]}>
-            {item.type === 'income' ? '+' : '-'}
-            {formatCurrency(Math.abs(item.amount))}
+            {formatCurrency(item.amount, account?.currency)}
           </Text>
           <Text style={styles.transactionDate}>{new Date(item.date).toLocaleDateString()}</Text>
         </View>
       </View>
     </View>
   );
+
+  const handleDeleteAccount = () => {
+    if (!account) {
+      return;
+    }
+
+    const hasBalance = Math.abs(account.balance) > 0.009;
+
+    if (hasBalance) {
+      Alert.alert(
+        t('accounts.deleteBlockedTitle'),
+        t('accounts.deleteBlockedMessage'),
+        [
+          {
+            text: t('accounts.transfer'),
+            onPress: () => setTransferModalVisible(true),
+          },
+          {
+            text: t('common.cancel'),
+            style: 'cancel',
+          },
+        ],
+      );
+      return;
+    }
+
+    Alert.alert(t('accounts.deleteAccount'), t('accounts.deleteConfirmation', {name: account.name}), [
+      {
+        text: t('common.cancel'),
+        style: 'cancel',
+      },
+      {
+        text: t('common.delete'),
+        style: 'destructive',
+        onPress: () => {
+          dispatch(deleteAccount(account.id));
+          dispatch(deleteTransactionsByAccount(account.id));
+          triggerHapticFeedback.light();
+          Toast.show({type: 'success', text1: t('success.accountDeleted')});
+          navigation.goBack();
+        },
+      },
+    ]);
+  };
 
   if (isLoading) {
     return <LoadingSpinner />;
@@ -86,64 +148,112 @@ const AccountDetailsScreen: React.FC = () => {
 
   return (
     <ScrollView style={styles.container}>
-      {/* Account Summary */}
       <Card>
         <View style={styles.accountHeader}>
-          <Text style={styles.accountName}>{account.name}</Text>
-          <Text style={styles.accountType}>{t(`accounts.accountTypes.${account.type}`)}</Text>
+          <View style={styles.headerInfo}>
+            <Text style={styles.accountName}>{account.name}</Text>
+            <Text style={styles.accountType}>{t(`accounts.accountTypes.${account.type}`)}</Text>
+          </View>
+          <View style={styles.balanceContainer}>
+            <Text style={styles.balanceLabel}>{t('accounts.balance')}</Text>
+            <Text
+              style={[
+                styles.balanceAmount,
+                account.balance < 0 ? styles.negativeBalance : styles.positiveBalance,
+              ]}>
+              {formatCurrency(account.balance, account.currency)}
+            </Text>
+          </View>
         </View>
-        <View style={styles.balanceContainer}>
-          <Text style={styles.balanceLabel}>{t('accounts.balance')}</Text>
-          <Text
-            style={[
-              styles.balanceAmount,
-              account.balance < 0 ? styles.negativeBalance : styles.positiveBalance,
-            ]}>
-            {formatCurrency(account.balance)}
-          </Text>
+
+        <View style={styles.metaRow}>
+          <Text style={styles.metaLabel}>{t('accounts.currency')}</Text>
+          <Text style={styles.metaValue}>{account.currency}</Text>
+        </View>
+        <View style={styles.metaRow}>
+          <Text style={styles.metaLabel}>{t('accounts.createdAt')}</Text>
+          <Text style={styles.metaValue}>{new Date(account.createdAt).toLocaleDateString()}</Text>
+        </View>
+        <View style={styles.metaRow}>
+          <Text style={styles.metaLabel}>{t('accounts.updatedAt')}</Text>
+          <Text style={styles.metaValue}>{new Date(account.updatedAt).toLocaleString()}</Text>
+        </View>
+
+        <View style={styles.actionRow}>
+          <Button
+            title={t('accounts.transfer')}
+            onPress={() => setTransferModalVisible(true)}
+            variant="secondary"
+            size="small"
+            disabled={!canTransfer}
+            style={styles.actionButton}
+          />
+          <Button
+            title={t('common.edit')}
+            onPress={() => setAccountModalVisible(true)}
+            variant="secondary"
+            size="small"
+            style={styles.actionButton}
+          />
+          <Button
+            title={t('common.delete')}
+            onPress={handleDeleteAccount}
+            variant="danger"
+            size="small"
+            style={styles.actionButton}
+          />
         </View>
       </Card>
 
-      {/* Account Statistics */}
       <Card>
-        <Text style={styles.sectionTitle}>Statistics</Text>
+        <Text style={styles.sectionTitle}>{t('accounts.statisticsTitle', 'Statistics')}</Text>
         <View style={styles.statsGrid}>
           <View style={styles.statItem}>
-            <Text style={styles.statValue}>{formatCurrency(accountStats.totalIncome)}</Text>
-            <Text style={styles.statLabel}>Total Income</Text>
+            <Text style={styles.statValue}>{formatCurrency(accountStats.totalIncome, account.currency)}</Text>
+            <Text style={styles.statLabel}>{t('accounts.totalIncomeLabel', 'Total Income')}</Text>
           </View>
           <View style={styles.statItem}>
-            <Text style={styles.statValue}>{formatCurrency(accountStats.totalExpenses)}</Text>
-            <Text style={styles.statLabel}>Total Expenses</Text>
+            <Text style={styles.statValue}>{formatCurrency(accountStats.totalExpenses, account.currency)}</Text>
+            <Text style={styles.statLabel}>{t('accounts.totalExpenseLabel', 'Total Expenses')}</Text>
           </View>
           <View style={styles.statItem}>
             <Text style={styles.statValue}>{accountStats.transactionCount}</Text>
-            <Text style={styles.statLabel}>Transactions</Text>
+            <Text style={styles.statLabel}>{t('accounts.transactionCountLabel', 'Transactions')}</Text>
           </View>
           <View style={styles.statItem}>
             <Text style={styles.statValue}>
-              {formatCurrency(accountStats.averageTransaction || 0)}
+              {formatCurrency(accountStats.averageTransaction || 0, account.currency)}
             </Text>
-            <Text style={styles.statLabel}>Average</Text>
+            <Text style={styles.statLabel}>{t('accounts.averageTransactionLabel', 'Average')}</Text>
           </View>
         </View>
       </Card>
 
-      {/* Transactions */}
       <Card style={styles.transactionsCard}>
-        <Text style={styles.sectionTitle}>Recent Transactions</Text>
+        <Text style={styles.sectionTitle}>{t('accounts.recentTransactions')}</Text>
         {transactions.length > 0 ? (
           <VirtualizedList
             data={transactions}
             renderItem={renderTransaction}
             keyExtractor={item => item.id}
-            itemHeight={80}
+            itemHeight={90}
             style={styles.transactionsList}
           />
         ) : (
-          <Text style={styles.emptyText}>No transactions found</Text>
+          <Text style={styles.emptyText}>{t('transactions.noTransactions')}</Text>
         )}
       </Card>
+
+      <AccountFormModal
+        visible={accountModalVisible}
+        account={account}
+        onClose={() => setAccountModalVisible(false)}
+      />
+      <TransferModal
+        visible={transferModalVisible}
+        sourceAccountId={account.id}
+        onClose={() => setTransferModalVisible(false)}
+      />
     </ScrollView>
   );
 };
@@ -152,10 +262,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F2F2F7',
+    paddingHorizontal: 16,
   },
   accountHeader: {
-    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
     marginBottom: 16,
+  },
+  headerInfo: {
+    flex: 1,
+    marginRight: 12,
   },
   accountName: {
     fontSize: 24,
@@ -169,7 +286,7 @@ const styles = StyleSheet.create({
     textTransform: 'capitalize',
   },
   balanceContainer: {
-    alignItems: 'center',
+    alignItems: 'flex-end',
   },
   balanceLabel: {
     fontSize: 14,
@@ -185,6 +302,30 @@ const styles = StyleSheet.create({
   },
   negativeBalance: {
     color: '#FF3B30',
+  },
+  metaRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 8,
+  },
+  metaLabel: {
+    fontSize: 14,
+    color: '#666',
+  },
+  metaValue: {
+    fontSize: 14,
+    color: '#333',
+    fontWeight: '500',
+  },
+  actionRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 16,
+    gap: 12,
+  },
+  actionButton: {
+    flex: 1,
   },
   sectionTitle: {
     fontSize: 18,
@@ -216,7 +357,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   transactionsList: {
-    maxHeight: 400,
+    maxHeight: 420,
   },
   transactionItem: {
     paddingVertical: 12,
@@ -240,8 +381,14 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#666',
   },
+  transactionMemo: {
+    fontSize: 12,
+    color: '#8E8E93',
+    marginTop: 4,
+  },
   transactionRight: {
     alignItems: 'flex-end',
+    marginLeft: 16,
   },
   transactionAmount: {
     fontSize: 16,

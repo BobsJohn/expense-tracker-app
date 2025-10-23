@@ -1,5 +1,6 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {Transaction} from '@/types';
+import {executeTransfer} from '@/store/actions/transfers';
 
 interface TransactionsState {
   transactions: Transaction[];
@@ -63,10 +64,66 @@ const transactionsSlice = createSlice({
     deleteTransaction: (state, action: PayloadAction<string>) => {
       state.transactions = state.transactions.filter(tx => tx.id !== action.payload);
     },
+    deleteTransactionsByAccount: (state, action: PayloadAction<string>) => {
+      state.transactions = state.transactions.filter(tx => tx.accountId !== action.payload);
+    },
+  },
+  extraReducers: builder => {
+    builder.addCase(executeTransfer, (state, action) => {
+      const {
+        transferId,
+        sourceAccountId,
+        sourceAccountName,
+        destinationAccountId,
+        destinationAccountName,
+        amount,
+        timestamp,
+        memo,
+      } = action.payload;
+
+      if (amount <= 0) {
+        return;
+      }
+
+      const outgoing: Transaction = {
+        id: `${transferId}-out`,
+        accountId: sourceAccountId,
+        amount: -amount,
+        category: 'Transfer',
+        description: `Transfer to ${destinationAccountName}`,
+        date: timestamp,
+        type: 'expense',
+        memo,
+        transferId,
+        relatedAccountId: destinationAccountId,
+      };
+
+      const incoming: Transaction = {
+        id: `${transferId}-in`,
+        accountId: destinationAccountId,
+        amount,
+        category: 'Transfer',
+        description: `Transfer from ${sourceAccountName}`,
+        date: timestamp,
+        type: 'income',
+        memo,
+        transferId,
+        relatedAccountId: sourceAccountId,
+      };
+
+      state.transactions.unshift(outgoing);
+      state.transactions.unshift(incoming);
+    });
   },
 });
 
-export const {setLoading, setError, addTransaction, updateTransaction, deleteTransaction} =
-  transactionsSlice.actions;
+export const {
+  setLoading,
+  setError,
+  addTransaction,
+  updateTransaction,
+  deleteTransaction,
+  deleteTransactionsByAccount,
+} = transactionsSlice.actions;
 
 export default transactionsSlice.reducer;
