@@ -2,6 +2,7 @@ import {createSelector} from '@reduxjs/toolkit';
 import {RootState} from './index';
 import {
   Account,
+  Transaction,
   ReportFilters,
   TimeGranularity,
   PeriodReportDatum,
@@ -50,8 +51,35 @@ export const selectTransactionsByAccount = createSelector(
       .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()),
 );
 
+export const selectLatestTransactionByAccount = createSelector([selectTransactions], transactions =>
+  transactions.reduce((acc, transaction) => {
+    const existing = acc[transaction.accountId];
+    if (!existing) {
+      acc[transaction.accountId] = transaction;
+      return acc;
+    }
+
+    const existingTime = new Date(existing.date).getTime();
+    const transactionTime = new Date(transaction.date).getTime();
+
+    if (transactionTime > existingTime) {
+      acc[transaction.accountId] = transaction;
+      return acc;
+    }
+
+    if (transactionTime === existingTime) {
+      acc[transaction.accountId] = transaction;
+    }
+
+    return acc;
+  }, {} as Record<string, Transaction>),
+);
+
 export const selectRecentTransactions = createSelector([selectTransactions], transactions =>
-  transactions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).slice(0, 10),
+  transactions
+    .slice()
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .slice(0, 10),
 );
 
 export const selectMonthlyIncome = createSelector([selectTransactions], transactions => {

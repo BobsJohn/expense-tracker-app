@@ -24,6 +24,8 @@ describe('Store Selectors', () => {
       type: 'checking',
       balance: 1000,
       currency: 'USD',
+      createdAt: '2024-01-01T00:00:00Z',
+      updatedAt: '2024-01-02T00:00:00Z',
     },
     {
       id: '2',
@@ -31,6 +33,8 @@ describe('Store Selectors', () => {
       type: 'savings',
       balance: 5000,
       currency: 'USD',
+      createdAt: '2024-01-01T00:00:00Z',
+      updatedAt: '2024-01-02T00:00:00Z',
     },
     {
       id: '3',
@@ -38,6 +42,8 @@ describe('Store Selectors', () => {
       type: 'credit',
       balance: -500,
       currency: 'USD',
+      createdAt: '2024-01-01T00:00:00Z',
+      updatedAt: '2024-01-02T00:00:00Z',
     },
   ];
 

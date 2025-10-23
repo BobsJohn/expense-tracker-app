@@ -40,6 +40,8 @@ describe('ExportService', () => {
       type: 'checking',
       balance: 1000,
       currency: 'USD',
+      createdAt: '2024-01-01T00:00:00Z',
+      updatedAt: '2024-01-01T00:00:00Z',
     },
     {
       id: '2',
@@ -47,6 +49,8 @@ describe('ExportService', () => {
       type: 'savings',
       balance: 5000,
       currency: 'USD',
+      createdAt: '2024-01-01T00:00:00Z',
+      updatedAt: '2024-01-01T00:00:00Z',
     },
   ];
 
