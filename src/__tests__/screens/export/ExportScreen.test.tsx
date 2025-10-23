@@ -38,6 +38,8 @@ const mockStore = configureStore({
           type: 'checking' as const,
           balance: 1000,
           currency: 'USD',
+          createdAt: '2024-01-01T00:00:00Z',
+          updatedAt: '2024-01-02T00:00:00Z',
         },
         {
           id: '2',
@@ -45,6 +47,8 @@ const mockStore = configureStore({
           type: 'savings' as const,
           balance: 5000,
           currency: 'USD',
+          createdAt: '2024-01-01T00:00:00Z',
+          updatedAt: '2024-01-02T00:00:00Z',
         },
       ],
       loading: false,

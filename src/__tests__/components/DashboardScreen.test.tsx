@@ -34,6 +34,8 @@ const createMockStore = (initialState = {}) => {
             type: 'checking',
             balance: 1000,
             currency: 'USD',
+            createdAt: '2024-01-01T00:00:00Z',
+            updatedAt: '2024-01-02T00:00:00Z',
           },
         ],
         loading: false,

@@ -107,6 +107,7 @@
     "deleteConfirmation": "Are you sure you want to delete {{name}}?",
     "deleteBlockedTitle": "Transfer required",
     "deleteBlockedMessage": "You need to transfer or adjust the balance to zero before deleting this account.",
+    "deleteBlockedNoAccounts": "Create another account or adjust this balance to zero before deleting.",
     "accountTypes": {
       "checking": "Checking",
       "savings": "Savings",

@@ -107,6 +107,7 @@
     "deleteConfirmation": "Voulez-vous vraiment supprimer {{name}} ?",
     "deleteBlockedTitle": "Transfert requis",
     "deleteBlockedMessage": "Vous devez transférer ou ajuster le solde à zéro avant de supprimer ce compte.",
+    "deleteBlockedNoAccounts": "Créez un autre compte ou ajustez ce solde à zéro avant de supprimer.",
     "accountTypes": {
       "checking": "Courant",
       "savings": "Épargne",

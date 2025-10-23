@@ -98,19 +98,30 @@ const AccountDetailsScreen: React.FC = () => {
     const hasBalance = Math.abs(account.balance) > 0.009;
 
     if (hasBalance) {
+      const message = canTransfer
+        ? t('accounts.deleteBlockedMessage')
+        : t('accounts.deleteBlockedNoAccounts');
+
       Alert.alert(
         t('accounts.deleteBlockedTitle'),
-        t('accounts.deleteBlockedMessage'),
-        [
-          {
-            text: t('accounts.transfer'),
-            onPress: () => setTransferModalVisible(true),
-          },
-          {
-            text: t('common.cancel'),
-            style: 'cancel',
-          },
-        ],
+        message,
+        canTransfer
+          ? [
+              {
+                text: t('accounts.transfer'),
+                onPress: () => setTransferModalVisible(true),
+              },
+              {
+                text: t('common.cancel'),
+                style: 'cancel',
+              },
+            ]
+          : [
+              {
+                text: t('common.cancel'),
+                style: 'cancel',
+              },
+            ],
       );
       return;
     }
