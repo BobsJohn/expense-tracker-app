@@ -310,7 +310,7 @@ const CategoryManagementScreen: React.FC = () => {
   const renderCategoryCard = (category: Category) => (
     <View key={category.id} style={styles.categoryCard}>
       <View style={styles.cardHeader}>
-        <View style={[styles.iconWrapper, {backgroundColor: category.color}]}> 
+        <View style={[styles.iconWrapper, {backgroundColor: category.color}]}>
           <MaterialCommunityIcons name={category.icon} size={24} color="#FFFFFF" />
         </View>
         <View style={styles.cardTitleWrapper}>
@@ -532,7 +532,7 @@ const CategoryManagementScreen: React.FC = () => {
                       }}
                       accessibilityRole="button"
                       accessibilityState={{selected: isActive}}>
-                      <View style={[styles.reassignIconWrapper, {backgroundColor: category.color}]}> 
+                      <View style={[styles.reassignIconWrapper, {backgroundColor: category.color}]}>
                         <MaterialCommunityIcons name={category.icon} size={20} color="#FFF" />
                       </View>
                       <View style={styles.reassignTextWrapper}>

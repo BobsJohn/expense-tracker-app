@@ -260,6 +260,9 @@
     "transactionDeleted": "Transaction deleted successfully",
     "budgetCreated": "Budget created successfully",
     "budgetUpdated": "Budget updated successfully",
-    "budgetDeleted": "Budget deleted successfully"
+    "budgetDeleted": "Budget deleted successfully",
+    "categoryCreated": "Category created successfully",
+    "categoryUpdated": "Category updated successfully",
+    "categoryDeleted": "Category deleted successfully"
   }
 }

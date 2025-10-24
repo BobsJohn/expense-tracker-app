@@ -153,7 +153,8 @@
     "notifications": "Notificaciones",
     "backup": "Copia de Seguridad",
     "about": "Acerca de",
-    "export": "Exportar datos"
+    "export": "Exportar datos",
+    "manageCategories": "Gestionar categorías"
   },
   "export": {
     "title": "Exportar datos",
@@ -179,6 +180,33 @@
     "selectDataTypeError": "Seleccione al menos un tipo de datos para exportar (Transacciones o Presupuestos).",
     "unknownError": "Se produjo un error desconocido durante la exportación."
   },
+  "categoryManagement": {
+    "title": "Gestión de categorías",
+    "description": "Organiza tus categorías de ingresos y gastos con iconos y colores personalizados.",
+    "sectionTitle": "Categorías de {{type}}",
+    "addCategory": "Agregar categoría",
+    "editCategory": "Editar categoría",
+    "createCategory": "Crear categoría",
+    "nameLabel": "Nombre de la categoría",
+    "namePlaceholder": "Ingrese el nombre de la categoría",
+    "typeLabel": "Tipo de categoría",
+    "colorLabel": "Elige un color",
+    "iconLabel": "Elige un icono",
+    "defaultBadge": "Predeterminada",
+    "lockedMessage": "Las categorías predeterminadas no se pueden editar ni eliminar.",
+    "duplicateError": "Ya existe una categoría con este nombre.",
+    "nameRequired": "El nombre de la categoría es obligatorio.",
+    "iconRequired": "Seleccione un icono.",
+    "colorRequired": "Seleccione un color.",
+    "deleteTitle": "Eliminar categoría",
+    "deleteMessage": "¿Seguro que desea eliminar {{name}}?",
+    "reassignTitle": "Reasignar transacciones",
+    "reassignDescription": "Elija una categoría para mover las transacciones de {{name}}.",
+    "reassignUnavailable": "Cree otra categoría para reasignar las transacciones antes de eliminar.",
+    "reassignConfirm": "Reasignar y eliminar",
+    "noCategories": "Sin categorías",
+    "emptyStateDescription": "Crea tu primera categoría para comenzar."
+  },
   "errors": {
     "validation": "Error de validación",
     "networkError": "Error de conexión de red",
@@ -197,6 +225,9 @@
     "transactionDeleted": "Transacción eliminada exitosamente",
     "budgetCreated": "Presupuesto creado exitosamente",
     "budgetUpdated": "Presupuesto actualizado exitosamente",
-    "budgetDeleted": "Presupuesto eliminado exitosamente"
+    "budgetDeleted": "Presupuesto eliminado exitosamente",
+    "categoryCreated": "Categoría creada exitosamente",
+    "categoryUpdated": "Categoría actualizada exitosamente",
+    "categoryDeleted": "Categoría eliminada exitosamente"
   }
 }

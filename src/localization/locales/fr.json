@@ -153,7 +153,8 @@
     "notifications": "Notifications",
     "backup": "Sauvegarde",
     "about": "À Propos",
-    "export": "Exporter les données"
+    "export": "Exporter les données",
+    "manageCategories": "Gérer les catégories"
   },
   "export": {
     "title": "Exporter les données",
@@ -179,6 +180,33 @@
     "selectDataTypeError": "Veuillez sélectionner au moins un type de données à exporter (Transactions ou Budgets).",
     "unknownError": "Une erreur inconnue s'est produite lors de l'exportation."
   },
+  "categoryManagement": {
+    "title": "Gestion des catégories",
+    "description": "Organisez vos catégories de revenus et de dépenses avec des icônes et des couleurs personnalisées.",
+    "sectionTitle": "Catégories {{type}}",
+    "addCategory": "Ajouter une catégorie",
+    "editCategory": "Modifier la catégorie",
+    "createCategory": "Créer une catégorie",
+    "nameLabel": "Nom de la catégorie",
+    "namePlaceholder": "Entrez le nom de la catégorie",
+    "typeLabel": "Type de catégorie",
+    "colorLabel": "Choisissez une couleur",
+    "iconLabel": "Choisissez une icône",
+    "defaultBadge": "Par défaut",
+    "lockedMessage": "Les catégories par défaut ne peuvent pas être modifiées ou supprimées.",
+    "duplicateError": "Une catégorie portant ce nom existe déjà.",
+    "nameRequired": "Le nom de la catégorie est obligatoire.",
+    "iconRequired": "Veuillez choisir une icône.",
+    "colorRequired": "Veuillez choisir une couleur.",
+    "deleteTitle": "Supprimer la catégorie",
+    "deleteMessage": "Voulez-vous vraiment supprimer {{name}} ?",
+    "reassignTitle": "Réaffecter les transactions",
+    "reassignDescription": "Choisissez une catégorie pour déplacer les transactions de {{name}}.",
+    "reassignUnavailable": "Créez une autre catégorie pour réaffecter les transactions avant de supprimer.",
+    "reassignConfirm": "Réaffecter et supprimer",
+    "noCategories": "Aucune catégorie",
+    "emptyStateDescription": "Créez votre première catégorie pour commencer."
+  },
   "errors": {
     "validation": "Erreur de validation",
     "networkError": "Erreur de connexion réseau",
@@ -197,6 +225,9 @@
     "transactionDeleted": "Transaction supprimée avec succès",
     "budgetCreated": "Budget créé avec succès",
     "budgetUpdated": "Budget mis à jour avec succès",
-    "budgetDeleted": "Budget supprimé avec succès"
+    "budgetDeleted": "Budget supprimé avec succès",
+    "categoryCreated": "Catégorie créée avec succès",
+    "categoryUpdated": "Catégorie mise à jour avec succès",
+    "categoryDeleted": "Catégorie supprimée avec succès"
   }
 }
