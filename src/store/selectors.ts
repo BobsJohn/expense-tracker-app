@@ -456,3 +456,106 @@ export const selectErrors = (state: RootState) => ({
   categories: state.categories.error,
   app: state.app.error,
 });
+
+// Transaction filter interface
+export interface TransactionFilters {
+  keyword?: string;
+  category?: string;
+  accountId?: string;
+  type?: 'income' | 'expense';
+  startDate?: Date | string;
+  endDate?: Date | string;
+}
+
+const selectTransactionFilters = (_: RootState, filters: TransactionFilters) => filters;
+
+// Filtered transactions selector
+export const selectFilteredTransactions = createSelector(
+  [selectTransactions, selectTransactionFilters],
+  (transactions, filters) => {
+    if (!filters) {
+      return transactions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    }
+
+    let filtered = transactions;
+
+    if (filters.keyword) {
+      const keyword = filters.keyword.toLowerCase();
+      filtered = filtered.filter(
+        tx =>
+          tx.description.toLowerCase().includes(keyword) ||
+          tx.category.toLowerCase().includes(keyword) ||
+          (tx.memo && tx.memo.toLowerCase().includes(keyword)),
+      );
+    }
+
+    if (filters.category) {
+      filtered = filtered.filter(tx => tx.category === filters.category);
+    }
+
+    if (filters.accountId) {
+      filtered = filtered.filter(tx => tx.accountId === filters.accountId);
+    }
+
+    if (filters.type) {
+      filtered = filtered.filter(tx => tx.type === filters.type);
+    }
+
+    if (filters.startDate) {
+      const start = normalizeDate(toDate(filters.startDate));
+      filtered = filtered.filter(tx => {
+        const txDate = toDate(tx.date);
+        return txDate >= start;
+      });
+    }
+
+    if (filters.endDate) {
+      const end = endOfDay(toDate(filters.endDate));
+      filtered = filtered.filter(tx => {
+        const txDate = toDate(tx.date);
+        return txDate <= end;
+      });
+    }
+
+    return filtered.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  },
+);
+
+// Transactions summary selector
+export const selectTransactionsSummary = createSelector([selectTransactions], transactions => {
+  const summary = transactions.reduce(
+    (acc, tx) => {
+      if (tx.type === 'income') {
+        acc.totalIncome += Math.abs(tx.amount);
+      } else {
+        acc.totalExpense += Math.abs(tx.amount);
+      }
+      return acc;
+    },
+    {totalIncome: 0, totalExpense: 0, netBalance: 0},
+  );
+
+  summary.netBalance = summary.totalIncome - summary.totalExpense;
+  return summary;
+});
+
+// Filtered transactions summary
+export const selectFilteredTransactionsSummary = createSelector(
+  [selectFilteredTransactions],
+  transactions => {
+    const summary = transactions.reduce(
+      (acc, tx) => {
+        if (tx.type === 'income') {
+          acc.totalIncome += Math.abs(tx.amount);
+        } else {
+          acc.totalExpense += Math.abs(tx.amount);
+        }
+        return acc;
+      },
+      {totalIncome: 0, totalExpense: 0, netBalance: 0},
+    );
+
+    summary.netBalance = summary.totalIncome - summary.totalExpense;
+    return summary;
+  },
+);

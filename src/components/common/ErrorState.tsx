@@ -4,25 +4,28 @@ import {useTranslation} from 'react-i18next';
 import Button from '@/components/ui/Button';
 
 interface ErrorStateProps {
+  title?: string;
   message?: string;
   onRetry?: () => void;
   showRetry?: boolean;
 }
 
-const ErrorState: React.FC<ErrorStateProps> = React.memo(({message, onRetry, showRetry = true}) => {
-  const {t} = useTranslation();
+const ErrorState: React.FC<ErrorStateProps> = React.memo(
+  ({title, message, onRetry, showRetry = true}) => {
+    const {t} = useTranslation();
 
-  return (
-    <View style={styles.container}>
-      <Text style={styles.emoji}>😕</Text>
-      <Text style={styles.title}>{t('common.error')}</Text>
-      <Text style={styles.message}>{message || t('errors.networkError')}</Text>
-      {showRetry && onRetry && (
-        <Button title={t('common.retry')} onPress={onRetry} style={styles.retryButton} />
-      )}
-    </View>
-  );
-});
+    return (
+      <View style={styles.container}>
+        <Text style={styles.emoji}>😕</Text>
+        <Text style={styles.title}>{title || t('common.error')}</Text>
+        <Text style={styles.message}>{message || t('errors.networkError')}</Text>
+        {showRetry && onRetry && (
+          <Button title={t('common.retry')} onPress={onRetry} style={styles.retryButton} />
+        )}
+      </View>
+    );
+  },
+);
 
 const styles = StyleSheet.create({
   container: {

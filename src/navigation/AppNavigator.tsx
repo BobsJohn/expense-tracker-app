@@ -13,36 +13,12 @@ import SettingsScreen from '@/screens/settings/SettingsScreen';
 import CategoryManagementScreen from '@/screens/settings/CategoryManagementScreen';
 import ExportScreen from '@/screens/export/ExportScreen';
 import BudgetsScreen from '@/screens/budgets/BudgetsScreen';
-// import TransactionsScreen from '@/screens/transactions/TransactionsScreen';
+import TransactionsScreen from '@/screens/transactions/TransactionsScreen';
 
 import {BottomTabParamList, RootStackParamList} from '@/types';
 
 const Tab = createBottomTabNavigator<BottomTabParamList>();
 const Stack = createStackNavigator<RootStackParamList>();
-
-// Temporary placeholder components for missing screens
-import {View, Text, StyleSheet} from 'react-native';
-
-const PlaceholderScreen = ({title}: {title: string}) => (
-  <View style={placeholderStyles.container}>
-    <Text style={placeholderStyles.text}>{title} - Coming Soon</Text>
-  </View>
-);
-
-const placeholderStyles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F2F2F7',
-  },
-  text: {
-    fontSize: 18,
-    color: '#666',
-  },
-});
-
-const TransactionsScreen = () => <PlaceholderScreen title="Transactions" />;
 
 const MainTabs: React.FC = () => {
   const {t} = useTranslation();
@@ -102,6 +78,7 @@ const MainTabs: React.FC = () => {
         component={TransactionsScreen}
         options={{
           title: t('navigation.transactions'),
+          headerShown: false,
         }}
       />
       <Tab.Screen
