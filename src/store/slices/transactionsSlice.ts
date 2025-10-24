@@ -1,6 +1,8 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+
 import {Transaction} from '@/types';
 import {executeTransfer} from '@/store/actions/transfers';
+import {updateCategory, deleteCategory} from './categoriesSlice';
 
 interface TransactionsState {
   transactions: Transaction[];
@@ -69,51 +71,106 @@ const transactionsSlice = createSlice({
     },
   },
   extraReducers: builder => {
-    builder.addCase(executeTransfer, (state, action) => {
-      const {
-        transferId,
-        sourceAccountId,
-        sourceAccountName,
-        destinationAccountId,
-        destinationAccountName,
-        amount,
-        timestamp,
-        memo,
-      } = action.payload;
+    builder
+      .addCase(executeTransfer, (state, action) => {
+        const {
+          transferId,
+          sourceAccountId,
+          sourceAccountName,
+          destinationAccountId,
+          destinationAccountName,
+          amount,
+          timestamp,
+          memo,
+        } = action.payload;
 
-      if (amount <= 0) {
-        return;
-      }
+        if (amount <= 0) {
+          return;
+        }
 
-      const outgoing: Transaction = {
-        id: `${transferId}-out`,
-        accountId: sourceAccountId,
-        amount: -amount,
-        category: 'Transfer',
-        description: `Transfer to ${destinationAccountName}`,
-        date: timestamp,
-        type: 'expense',
-        memo,
-        transferId,
-        relatedAccountId: destinationAccountId,
-      };
+        const outgoing: Transaction = {
+          id: `${transferId}-out`,
+          accountId: sourceAccountId,
+          amount: -amount,
+          category: 'Transfer',
+          description: `Transfer to ${destinationAccountName}`,
+          date: timestamp,
+          type: 'expense',
+          memo,
+          transferId,
+          relatedAccountId: destinationAccountId,
+        };
 
-      const incoming: Transaction = {
-        id: `${transferId}-in`,
-        accountId: destinationAccountId,
-        amount,
-        category: 'Transfer',
-        description: `Transfer from ${sourceAccountName}`,
-        date: timestamp,
-        type: 'income',
-        memo,
-        transferId,
-        relatedAccountId: sourceAccountId,
-      };
+        const incoming: Transaction = {
+          id: `${transferId}-in`,
+          accountId: destinationAccountId,
+          amount,
+          category: 'Transfer',
+          description: `Transfer from ${sourceAccountName}`,
+          date: timestamp,
+          type: 'income',
+          memo,
+          transferId,
+          relatedAccountId: sourceAccountId,
+        };
 
-      state.transactions.unshift(outgoing);
-      state.transactions.unshift(incoming);
-    });
+        state.transactions.unshift(outgoing);
+        state.transactions.unshift(incoming);
+      })
+      .addCase(updateCategory, (state, action) => {
+        const {previous, updates} = action.payload;
+        const newName = updates.name.trim();
+        const nameChanged = previous.name !== newName;
+        const typeChanged = previous.type !== updates.type;
+
+        if (!nameChanged && !typeChanged) {
+          return;
+        }
+
+        state.transactions = state.transactions.map(transaction => {
+          const matchesCategory =
+            transaction.category === previous.name && transaction.type === previous.type;
+
+          if (!matchesCategory) {
+            return transaction;
+          }
+
+          return {
+            ...transaction,
+            category: nameChanged ? newName : transaction.category,
+            type: typeChanged ? updates.type : transaction.type,
+          };
+        });
+      })
+      .addCase(deleteCategory, (state, action) => {
+        const {category, reassignmentCategory} = action.payload;
+
+        if (!category) {
+          return;
+        }
+
+        state.transactions = state.transactions.map(transaction => {
+          const matchesCategory =
+            transaction.category === category.name && transaction.type === category.type;
+
+          if (!matchesCategory) {
+            return transaction;
+          }
+
+          if (reassignmentCategory) {
+            return {
+              ...transaction,
+              category: reassignmentCategory.name,
+              type: reassignmentCategory.type,
+            };
+          }
+
+          return {
+            ...transaction,
+            category: 'Uncategorized',
+          };
+        });
+      });
   },
 });
 

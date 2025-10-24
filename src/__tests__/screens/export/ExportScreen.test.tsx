@@ -9,6 +9,7 @@ import ExportScreen from '@/screens/export/ExportScreen';
 import accountsSlice from '@/store/slices/accountsSlice';
 import transactionsSlice from '@/store/slices/transactionsSlice';
 import budgetsSlice from '@/store/slices/budgetsSlice';
+import categoriesSlice from '@/store/slices/categoriesSlice';
 import appSlice from '@/store/slices/appSlice';
 import exportService from '@/services/exportService';
 import '@/localization/i18n';
@@ -27,6 +28,7 @@ const mockStore = configureStore({
     accounts: accountsSlice,
     transactions: transactionsSlice,
     budgets: budgetsSlice,
+    categories: categoriesSlice,
     app: appSlice,
   },
   preloadedState: {
@@ -95,6 +97,28 @@ const mockStore = configureStore({
           spentAmount: 125.0,
           period: 'monthly' as const,
           currency: 'USD',
+        },
+      ],
+      loading: false,
+      error: null,
+    },
+    categories: {
+      categories: [
+        {
+          id: 'category-expense-food',
+          name: 'Food',
+          icon: 'silverware-fork-knife',
+          color: '#FF6B6B',
+          type: 'expense' as const,
+          isDefault: true,
+        },
+        {
+          id: 'category-income-salary',
+          name: 'Salary',
+          icon: 'briefcase',
+          color: '#34C759',
+          type: 'income' as const,
+          isDefault: true,
         },
       ],
       loading: false,

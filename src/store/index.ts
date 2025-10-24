@@ -5,18 +5,20 @@ import {combineReducers} from '@reduxjs/toolkit';
 import accountsSlice from './slices/accountsSlice';
 import transactionsSlice from './slices/transactionsSlice';
 import budgetsSlice from './slices/budgetsSlice';
+import categoriesSlice from './slices/categoriesSlice';
 import appSlice from './slices/appSlice';
 
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  whitelist: ['accounts', 'transactions', 'budgets'], // Only persist these reducers
+  whitelist: ['accounts', 'transactions', 'budgets', 'categories'],
 };
 
 const rootReducer = combineReducers({
   accounts: accountsSlice,
   transactions: transactionsSlice,
   budgets: budgetsSlice,
+  categories: categoriesSlice,
   app: appSlice,
 });
 

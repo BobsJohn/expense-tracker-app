@@ -28,6 +28,12 @@ const SettingsScreen: React.FC = () => {
       showArrow: true,
     },
     {
+      key: 'categories',
+      title: t('settings.manageCategories'),
+      onPress: () => navigation.navigate('CategoryManagement'),
+      showArrow: true,
+    },
+    {
       key: 'language',
       title: t('settings.language'),
       showArrow: true,

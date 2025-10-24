@@ -10,6 +10,7 @@ import AccountsScreen from '@/screens/accounts/AccountsScreen';
 import AccountDetailsScreen from '@/screens/accounts/AccountDetailsScreen';
 import ReportsScreen from '@/screens/reports/ReportsScreen';
 import SettingsScreen from '@/screens/settings/SettingsScreen';
+import CategoryManagementScreen from '@/screens/settings/CategoryManagementScreen';
 import ExportScreen from '@/screens/export/ExportScreen';
 import BudgetsScreen from '@/screens/budgets/BudgetsScreen';
 // import TransactionsScreen from '@/screens/transactions/TransactionsScreen';
@@ -125,6 +126,11 @@ const AppNavigator: React.FC = () => {
           name="AccountDetails"
           component={AccountDetailsScreen}
           options={{title: 'Account Details'}}
+        />
+        <Stack.Screen
+          name="CategoryManagement"
+          component={CategoryManagementScreen}
+          options={{title: t('categoryManagement.title')}}
         />
         <Stack.Screen name="Export" component={ExportScreen} options={{title: t('export.title')}} />
       </Stack.Navigator>

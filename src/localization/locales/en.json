@@ -188,7 +188,8 @@
     "notifications": "Notifications",
     "backup": "Backup & Sync",
     "about": "About",
-    "export": "Export Data"
+    "export": "Export Data",
+    "manageCategories": "Manage Categories"
   },
   "export": {
     "title": "Export Data",
@@ -214,6 +215,33 @@
     "selectDataTypeError": "Please select at least one data type to export (Transactions or Budgets).",
     "unknownError": "An unknown error occurred during export."
   },
+  "categoryManagement": {
+    "title": "Category Management",
+    "description": "Organize your income and expense categories with custom icons and colors.",
+    "sectionTitle": "{{type}} Categories",
+    "addCategory": "Add Category",
+    "editCategory": "Edit Category",
+    "createCategory": "Create Category",
+    "nameLabel": "Category Name",
+    "namePlaceholder": "Enter category name",
+    "typeLabel": "Category Type",
+    "colorLabel": "Choose a color",
+    "iconLabel": "Choose an icon",
+    "defaultBadge": "Default",
+    "lockedMessage": "Default categories cannot be edited or deleted.",
+    "duplicateError": "A category with this name already exists.",
+    "nameRequired": "Category name is required.",
+    "iconRequired": "Please choose an icon.",
+    "colorRequired": "Please choose a color.",
+    "deleteTitle": "Delete Category",
+    "deleteMessage": "Are you sure you want to delete {{name}}?",
+    "reassignTitle": "Reassign Transactions",
+    "reassignDescription": "Choose a category to move transactions from {{name}}.",
+    "reassignUnavailable": "Create another category to reassign transactions before deleting.",
+    "reassignConfirm": "Reassign & Delete",
+    "noCategories": "No categories yet",
+    "emptyStateDescription": "Create your first category to get started."
+  },
   "errors": {
     "validation": "Validation Error",
     "networkError": "Network connection error",
@@ -232,6 +260,9 @@
     "transactionDeleted": "Transaction deleted successfully",
     "budgetCreated": "Budget created successfully",
     "budgetUpdated": "Budget updated successfully",
-    "budgetDeleted": "Budget deleted successfully"
+    "budgetDeleted": "Budget deleted successfully",
+    "categoryCreated": "Category created successfully",
+    "categoryUpdated": "Category updated successfully",
+    "categoryDeleted": "Category deleted successfully"
   }
 }

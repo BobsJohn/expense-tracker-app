@@ -21,6 +21,17 @@ export interface Transaction {
   relatedAccountId?: string;
 }
 
+export type CategoryType = 'income' | 'expense';
+
+export interface Category {
+  id: string;
+  name: string;
+  icon: string;
+  color: string;
+  type: CategoryType;
+  isDefault?: boolean;
+}
+
 export interface Budget {
   id: string;
   category: string;
@@ -82,6 +93,7 @@ export interface AppState {
   accounts: Account[];
   transactions: Transaction[];
   budgets: Budget[];
+  categories: Category[];
   loading: boolean;
   error: string | null;
 }
@@ -95,6 +107,7 @@ export type RootStackParamList = {
   Transactions: undefined;
   AddTransaction: {accountId?: string};
   Settings: undefined;
+  CategoryManagement: undefined;
   Export: undefined;
 };
 

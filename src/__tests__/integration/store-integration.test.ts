@@ -2,6 +2,7 @@ import {configureStore} from '@reduxjs/toolkit';
 import accountsSlice, {addAccount, updateAccountBalance} from '@/store/slices/accountsSlice';
 import transactionsSlice, {addTransaction} from '@/store/slices/transactionsSlice';
 import budgetsSlice, {updateBudgetSpent} from '@/store/slices/budgetsSlice';
+import categoriesSlice from '@/store/slices/categoriesSlice';
 import {selectTotalBalance, selectMonthlyIncome} from '@/store/selectors';
 import {executeTransfer} from '@/store/actions/transfers';
 import {Account, Transaction} from '@/types';
@@ -13,6 +14,7 @@ describe('Store Integration Tests', () => {
         accounts: accountsSlice,
         transactions: transactionsSlice,
         budgets: budgetsSlice,
+        categories: categoriesSlice,
       },
     });
   };

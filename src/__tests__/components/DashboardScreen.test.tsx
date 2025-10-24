@@ -8,6 +8,7 @@ import DashboardScreen from '@/screens/dashboard/DashboardScreen';
 import accountsSlice from '@/store/slices/accountsSlice';
 import transactionsSlice from '@/store/slices/transactionsSlice';
 import budgetsSlice from '@/store/slices/budgetsSlice';
+import categoriesSlice from '@/store/slices/categoriesSlice';
 import appSlice from '@/store/slices/appSlice';
 
 // Mock i18next
@@ -23,6 +24,7 @@ const createMockStore = (initialState = {}) => {
       accounts: accountsSlice,
       transactions: transactionsSlice,
       budgets: budgetsSlice,
+      categories: categoriesSlice,
       app: appSlice,
     },
     preloadedState: {
@@ -65,6 +67,28 @@ const createMockStore = (initialState = {}) => {
             spentAmount: 200,
             period: 'monthly',
             currency: 'USD',
+          },
+        ],
+        loading: false,
+        error: null,
+      },
+      categories: {
+        categories: [
+          {
+            id: 'category-expense-food',
+            name: 'Food',
+            icon: 'silverware-fork-knife',
+            color: '#FF6B6B',
+            type: 'expense',
+            isDefault: true,
+          },
+          {
+            id: 'category-income-salary',
+            name: 'Salary',
+            icon: 'briefcase',
+            color: '#34C759',
+            type: 'income',
+            isDefault: true,
           },
         ],
         loading: false,
