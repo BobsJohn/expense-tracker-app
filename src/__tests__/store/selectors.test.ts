@@ -12,9 +12,12 @@ import {
   selectCategoryDistributionReport,
   selectAccountReports,
   selectReportSummary,
+  selectCategories,
+  selectCategoriesByType,
+  selectCategoryById,
 } from '@/store/selectors';
 import {RootState} from '@/store';
-import {Account, Transaction, Budget, ReportFilters} from '@/types';
+import {Account, Transaction, Budget, ReportFilters, Category} from '@/types';
 
 describe('Store Selectors', () => {
   const mockAccounts: Account[] = [
@@ -105,6 +108,30 @@ describe('Store Selectors', () => {
     },
   ];
 
+  const mockCategories: Category[] = [
+    {
+      id: 'category-expense-food',
+      name: 'Food',
+      icon: 'silverware-fork-knife',
+      color: '#FF6B6B',
+      type: 'expense',
+    },
+    {
+      id: 'category-expense-entertainment',
+      name: 'Entertainment',
+      icon: 'music-note',
+      color: '#A29BFE',
+      type: 'expense',
+    },
+    {
+      id: 'category-income-salary',
+      name: 'Salary',
+      icon: 'briefcase',
+      color: '#34C759',
+      type: 'income',
+    },
+  ];
+
   const mockState: RootState = {
     accounts: {
       accounts: mockAccounts,
@@ -118,6 +145,11 @@ describe('Store Selectors', () => {
     },
     budgets: {
       budgets: mockBudgets,
+      loading: false,
+      error: null,
+    },
+    categories: {
+      categories: mockCategories,
       loading: false,
       error: null,
     },
@@ -161,6 +193,27 @@ describe('Store Selectors', () => {
         savings: [mockAccounts[1]],
         credit: [mockAccounts[2]],
       });
+    });
+  });
+
+  describe('category selectors', () => {
+    it('should return all categories', () => {
+      const result = selectCategories(mockState);
+      expect(result).toEqual(mockCategories);
+    });
+
+    it('should group categories by type', () => {
+      const result = selectCategoriesByType(mockState);
+      expect(result).toEqual({
+        expense: [mockCategories[0], mockCategories[1]],
+        income: [mockCategories[2]],
+      });
+    });
+
+    it('should find a category by id', () => {
+      const target = mockCategories[1];
+      const result = selectCategoryById(mockState, target.id);
+      expect(result).toEqual(target);
     });
   });
 

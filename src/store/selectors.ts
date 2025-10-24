@@ -10,12 +10,30 @@ import {
   CategoryReportDatum,
   AccountReportDatum,
   ReportSummary,
+  Category,
+  CategoryType,
 } from '@/types';
 
 // Basic selectors
 export const selectAccounts = (state: RootState) => state.accounts.accounts;
 export const selectTransactions = (state: RootState) => state.transactions.transactions;
 export const selectBudgets = (state: RootState) => state.budgets.budgets;
+export const selectCategories = (state: RootState) => state.categories.categories;
+
+export const selectCategoriesByType = createSelector([selectCategories], categories =>
+  categories.reduce((acc, category) => {
+    if (!acc[category.type]) {
+      acc[category.type] = [];
+    }
+    acc[category.type].push(category);
+    return acc;
+  }, {} as Record<CategoryType, Category[]>),
+);
+
+export const selectCategoryById = createSelector(
+  [selectCategories, (_: RootState, categoryId: string) => categoryId],
+  (categories, categoryId) => categories.find(category => category.id === categoryId),
+);
 
 // Account selectors
 export const selectAccountById = createSelector(
@@ -428,11 +446,13 @@ export const selectIsLoading = (state: RootState) =>
   state.accounts.loading ||
   state.transactions.loading ||
   state.budgets.loading ||
+  state.categories.loading ||
   state.app.isLoading;
 
 export const selectErrors = (state: RootState) => ({
   accounts: state.accounts.error,
   transactions: state.transactions.error,
   budgets: state.budgets.error,
+  categories: state.categories.error,
   app: state.app.error,
 });

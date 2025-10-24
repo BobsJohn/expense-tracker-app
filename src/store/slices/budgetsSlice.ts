@@ -1,5 +1,7 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+
 import {Budget} from '@/types';
+import {updateCategory, deleteCategory} from './categoriesSlice';
 
 interface BudgetsState {
   budgets: Budget[];
@@ -106,6 +108,53 @@ const budgetsSlice = createSlice({
         });
       }
     },
+  },
+  extraReducers: builder => {
+    builder
+      .addCase(updateCategory, (state, action) => {
+        const previousName = action.payload.previous.name;
+        const newName = action.payload.updates.name.trim();
+
+        if (previousName === newName) {
+          return;
+        }
+
+        state.budgets = state.budgets.map(budget => {
+          if (budget.category !== previousName) {
+            return budget;
+          }
+
+          return {
+            ...budget,
+            category: newName,
+            updatedAt: new Date().toISOString(),
+          };
+        });
+      })
+      .addCase(deleteCategory, (state, action) => {
+        const removedCategory = action.payload.category;
+
+        if (!removedCategory) {
+          return;
+        }
+
+        if (action.payload.reassignmentCategory) {
+          const replacementName = action.payload.reassignmentCategory.name;
+          state.budgets = state.budgets.map(budget => {
+            if (budget.category !== removedCategory.name) {
+              return budget;
+            }
+
+            return {
+              ...budget,
+              category: replacementName,
+              updatedAt: new Date().toISOString(),
+            };
+          });
+        } else {
+          state.budgets = state.budgets.filter(budget => budget.category !== removedCategory.name);
+        }
+      });
   },
 });
 
