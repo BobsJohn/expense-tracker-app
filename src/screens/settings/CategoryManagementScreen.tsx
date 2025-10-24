@@ -332,7 +332,7 @@ const CategoryManagementScreen: React.FC = () => {
             <MaterialCommunityIcons name="pencil" size={18} color="#007AFF" />
           </TouchableOpacity>
           <TouchableOpacity
-            style={styles.actionButton}
+            style={[styles.actionButton, styles.actionButtonSpacing]}
             onPress={() => handleDeleteCategory(category)}
             accessibilityRole="button"
             accessibilityLabel={t('common.delete')}>
@@ -417,12 +417,17 @@ const CategoryManagementScreen: React.FC = () => {
             <View style={styles.formGroup}>
               <Text style={styles.label}>{t('categoryManagement.typeLabel')}</Text>
               <View style={styles.typeSelector}>
-                {CATEGORY_TYPES.map(type => {
+                {CATEGORY_TYPES.map((type, index) => {
                   const isActive = formValues.type === type;
+                  const isLast = index === CATEGORY_TYPES.length - 1;
                   return (
                     <TouchableOpacity
                       key={type}
-                      style={[styles.typeOption, isActive && styles.typeOptionActive]}
+                      style={[
+                        styles.typeOption,
+                        isActive && styles.typeOptionActive,
+                        isLast && styles.typeOptionLast,
+                      ]}
                       onPress={() => {
                         triggerHapticFeedback.selection();
                         setFormValues(prev => ({...prev, type}));
@@ -558,7 +563,7 @@ const CategoryManagementScreen: React.FC = () => {
               title={t('common.cancel')}
               variant="secondary"
               onPress={closeReassignModal}
-              style={styles.modalFooterButton}
+              style={[styles.modalFooterButton, styles.modalFooterButtonSpacing]}
             />
             <Button
               title={t('categoryManagement.reassignConfirm')}
@@ -685,12 +690,15 @@ const styles = StyleSheet.create({
   cardActions: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    gap: 12,
+    alignItems: 'center',
   },
   actionButton: {
     backgroundColor: '#F2F2F7',
     borderRadius: 10,
     padding: 8,
+  },
+  actionButtonSpacing: {
+    marginLeft: 12,
   },
   emptyState: {
     alignItems: 'center',
@@ -761,7 +769,6 @@ const styles = StyleSheet.create({
   },
   typeSelector: {
     flexDirection: 'row',
-    gap: 12,
   },
   typeOption: {
     flex: 1,
@@ -771,6 +778,10 @@ const styles = StyleSheet.create({
     borderColor: '#E5E5EA',
     backgroundColor: '#FFFFFF',
     alignItems: 'center',
+    marginRight: 12,
+  },
+  typeOptionLast: {
+    marginRight: 0,
   },
   typeOptionActive: {
     backgroundColor: '#007AFF',
@@ -787,7 +798,8 @@ const styles = StyleSheet.create({
   colorGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 12,
+    marginRight: -12,
+    marginBottom: -12,
   },
   colorSwatch: {
     width: 42,
@@ -795,6 +807,8 @@ const styles = StyleSheet.create({
     borderRadius: 21,
     borderWidth: 2,
     borderColor: 'transparent',
+    marginRight: 12,
+    marginBottom: 12,
   },
   colorSwatchActive: {
     borderColor: '#007AFF',
@@ -884,10 +898,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     borderTopWidth: StyleSheet.hairlineWidth,
     borderTopColor: '#E5E5EA',
-    gap: 12,
   },
   modalFooterButton: {
     flex: 1,
+  },
+  modalFooterButtonSpacing: {
+    marginRight: 12,
   },
 });
 
