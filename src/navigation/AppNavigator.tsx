@@ -1,3 +1,20 @@
+/**
+ * 应用导航配置
+ * 
+ * 功能说明：
+ * - 配置应用的导航结构（底部标签栏 + 堆栈导航）
+ * - 管理屏幕间的路由和跳转
+ * - 集成主题系统和国际化
+ * - 提供类型安全的导航参数
+ * 
+ * 导航架构：
+ * - 使用 React Navigation 5.x
+ * - 底部标签栏导航（MainTabs）：交易、账户、预算、报表、设置
+ * - 堆栈导航（Stack）：处理详情页和二级页面
+ * - 支持深度链接和状态持久化
+ * 
+ * @module navigation/AppNavigator
+ */
 import React, {useState} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -5,7 +22,6 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {useTranslation} from 'react-i18next';
 import {useTheme} from '@/theme';
 
-// Screens
 import LoginScreen from '@/screens/auth/LoginScreen';
 import AccountsScreen from '@/screens/accounts/AccountsScreen';
 import AccountDetailsScreen from '@/screens/accounts/AccountDetailsScreen';
@@ -21,6 +37,11 @@ import {BottomTabParamList, RootStackParamList} from '@/types';
 const Tab = createBottomTabNavigator<BottomTabParamList>();
 const Stack = createStackNavigator<RootStackParamList>();
 
+/**
+ * 主标签栏导航组件
+ * 
+ * 功能：配置底部标签栏的所有页面和样式
+ */
 const MainTabs: React.FC = () => {
   const {t} = useTranslation();
   const {theme} = useTheme();

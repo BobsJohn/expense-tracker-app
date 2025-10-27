@@ -1,25 +1,46 @@
+/**
+ * 数据库管理模块
+ * 
+ * 功能说明：
+ * - 管理 SQLite 数据库的连接和生命周期
+ * - 提供数据库初始化、关闭、删除等操作
+ * - 支持数据库事务处理
+ * - 管理数据库迁移和版本控制
+ * 
+ * 架构说明：
+ * - 使用单例模式确保全局只有一个数据库连接
+ * - 支持懒加载，首次使用时自动初始化
+ * - 提供线程安全的初始化逻辑，防止重复初始化
+ * 
+ * @module database
+ */
 import SQLite, {SQLiteDatabase} from 'react-native-sqlite-storage';
 import {runMigrations, needsMigration} from './migrations';
 
-// 启用 Promise API
 SQLite.enablePromise(true);
 
-// 数据库配置
 const DATABASE_NAME = 'FinancialBudgetApp.db';
 const DATABASE_VERSION = 1;
 const DATABASE_DISPLAY_NAME = 'Financial Budget Database';
-const DATABASE_SIZE = 5 * 1024 * 1024; // 5MB
+const DATABASE_SIZE = 5 * 1024 * 1024;
 
-// 数据库实例
 let dbInstance: SQLiteDatabase | null = null;
-
-// 数据库初始化状态
 let isInitialized = false;
 let initializationPromise: Promise<SQLiteDatabase> | null = null;
 
 /**
  * 获取数据库实例
- * 如果数据库尚未初始化，将自动初始化
+ * 
+ * 功能：
+ * - 返回已初始化的数据库实例
+ * - 如果数据库未初始化，自动执行初始化
+ * - 防止并发初始化导致的问题
+ * 
+ * @returns Promise<SQLiteDatabase> 数据库实例
+ * 
+ * @example
+ * const db = await getDatabase();
+ * const result = await db.executeSql('SELECT * FROM accounts');
  */
 export const getDatabase = async (): Promise<SQLiteDatabase> => {
   if (dbInstance && isInitialized) {
@@ -36,7 +57,17 @@ export const getDatabase = async (): Promise<SQLiteDatabase> => {
 
 /**
  * 初始化数据库
- * 包括打开数据库连接和运行必要的迁移
+ * 
+ * 功能：
+ * - 打开或创建 SQLite 数据库连接
+ * - 检查并执行数据库迁移
+ * - 确保数据库结构为最新版本
+ * 
+ * @returns Promise<SQLiteDatabase> 初始化后的数据库实例
+ * @throws 初始化失败时抛出错误
+ * 
+ * @example
+ * await initDatabase();
  */
 export const initDatabase = async (): Promise<SQLiteDatabase> => {
   if (dbInstance && isInitialized) {
@@ -78,6 +109,10 @@ export const initDatabase = async (): Promise<SQLiteDatabase> => {
 
 /**
  * 关闭数据库连接
+ * 
+ * 功能：安全关闭数据库连接并清理资源
+ * 
+ * @throws 关闭失败时抛出错误
  */
 export const closeDatabase = async (): Promise<void> => {
   if (dbInstance) {
@@ -95,7 +130,12 @@ export const closeDatabase = async (): Promise<void> => {
 
 /**
  * 删除数据库
- * 警告：这将删除所有数据
+ * 
+ * 功能：完全删除数据库文件
+ * 
+ * ⚠️ 警告：此操作不可逆，将永久删除所有数据
+ * 
+ * @throws 删除失败时抛出错误
  */
 export const deleteDatabase = async (): Promise<void> => {
   try {
@@ -109,8 +149,22 @@ export const deleteDatabase = async (): Promise<void> => {
 };
 
 /**
- * 执行事务
- * @param operations - 要在事务中执行的操作
+ * 执行数据库事务
+ * 
+ * 功能：
+ * - 在事务中执行一组数据库操作
+ * - 保证操作的原子性（全部成功或全部回滚）
+ * - 提高批量操作的性能
+ * 
+ * @param operations - 事务操作函数，接收数据库实例作为参数
+ * @returns Promise<T> 操作结果
+ * @throws 事务执行失败时抛出错误
+ * 
+ * @example
+ * await executeTransaction(async (db) => {
+ *   await db.executeSql('INSERT INTO accounts ...');
+ *   await db.executeSql('UPDATE budgets ...');
+ * });
  */
 export const executeTransaction = async <T>(
   operations: (db: SQLiteDatabase) => Promise<T>,
@@ -137,6 +191,10 @@ export const executeTransaction = async <T>(
 
 /**
  * 检查数据库是否已初始化
+ * 
+ * 功能：返回数据库的初始化状态
+ * 
+ * @returns boolean 已初始化返回 true，否则返回 false
  */
 export const isDatabaseInitialized = (): boolean => {
   return isInitialized && dbInstance !== null;
@@ -144,7 +202,14 @@ export const isDatabaseInitialized = (): boolean => {
 
 /**
  * 重置数据库到初始状态
- * 警告：这将删除所有数据
+ * 
+ * 功能：
+ * - 删除现有数据库
+ * - 重新创建并初始化数据库
+ * 
+ * ⚠️ 警告：此操作将删除所有数据，常用于开发和测试环境
+ * 
+ * @throws 重置失败时抛出错误
  */
 export const resetDatabase = async (): Promise<void> => {
   await deleteDatabase();

@@ -1,9 +1,25 @@
+/**
+ * 基础数据仓储类
+ * 
+ * 功能说明：
+ * - 提供所有仓储类的基础数据库操作方法
+ * - 封装通用的 CRUD 操作和事务处理
+ * - 简化派生仓储类的实现
+ * 
+ * 设计模式：
+ * - 使用仓储模式（Repository Pattern）
+ * - 抽象类，需要被具体仓储类继承
+ * - 提供模板方法供子类使用
+ * 
+ * @module repositories/baseRepository
+ */
 import {SQLiteDatabase, ResultSet} from 'react-native-sqlite-storage';
 import {getDatabase} from '@/database/database';
 
 /**
- * 基础仓储类
- * 提供通用的数据库操作方法
+ * 基础仓储抽象类
+ * 
+ * 所有具体仓储类应继承此类以获得通用数据库操作能力
  */
 export abstract class BaseRepository {
   protected async getDb(): Promise<SQLiteDatabase> {
@@ -11,7 +27,11 @@ export abstract class BaseRepository {
   }
 
   /**
-   * 执行 SQL 查询
+   * 执行 SQL 查询语句
+   * 
+   * @param sql - SQL 查询语句
+   * @param params - 查询参数数组（用于参数化查询，防止 SQL 注入）
+   * @returns Promise<[ResultSet]> 查询结果集
    */
   protected async executeSql(
     sql: string,
@@ -22,7 +42,12 @@ export abstract class BaseRepository {
   }
 
   /**
-   * 执行多个 SQL 语句（事务）
+   * 执行数据库事务
+   * 
+   * 功能：在事务中执行多个 SQL 语句，保证原子性
+   * 
+   * @param operations - 事务操作函数
+   * @returns Promise<void>
    */
   protected async executeTransaction(
     operations: (db: SQLiteDatabase) => Promise<void>,
