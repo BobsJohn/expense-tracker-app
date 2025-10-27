@@ -1,9 +1,31 @@
+/**
+ * 数据导出服务
+ * 
+ * 功能说明：
+ * - 提供财务数据导出功能（CSV、Excel 格式）
+ * - 支持按日期范围、账户、分类筛选数据
+ * - 生成格式化的导出文件并分享
+ * - 支持导出交易记录和预算数据
+ * 
+ * 技术实现：
+ * - 使用 papaparse 生成 CSV 文件
+ * - 使用 xlsx 库生成 Excel 文件
+ * - 使用 react-native-fs 处理文件系统操作
+ * - 使用 react-native-share 实现文件分享功能
+ * 
+ * @module services/exportService
+ */
 import * as Papa from 'papaparse';
 import * as XLSX from 'xlsx';
 import * as RNFS from 'react-native-fs';
 import Share from 'react-native-share';
 import {Transaction, Budget, Account} from '../types';
 
+/**
+ * 导出选项接口
+ * 
+ * 定义数据导出的配置参数
+ */
 export interface ExportOptions {
   format: 'csv' | 'xlsx';
   dateRange: {
@@ -16,6 +38,11 @@ export interface ExportOptions {
   selectedCategories?: string[];
 }
 
+/**
+ * 交易导出数据接口
+ * 
+ * 定义导出文件中交易记录的列结构
+ */
 export interface TransactionExportData {
   Date: string;
   Description: string;
@@ -25,6 +52,11 @@ export interface TransactionExportData {
   Account: string;
 }
 
+/**
+ * 预算导出数据接口
+ * 
+ * 定义导出文件中预算数据的列结构
+ */
 export interface BudgetExportData {
   Category: string;
   'Budgeted Amount': string;
@@ -35,6 +67,11 @@ export interface BudgetExportData {
   Currency: string;
 }
 
+/**
+ * 导出服务类
+ * 
+ * 提供财务数据导出的核心功能
+ */
 class ExportService {
   private formatCurrency(amount: number, currency: string = 'USD'): string {
     return new Intl.NumberFormat('en-US', {
