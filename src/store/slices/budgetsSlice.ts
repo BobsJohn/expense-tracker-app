@@ -2,6 +2,12 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 import {Budget} from '@/types';
 import {updateCategory, deleteCategory} from './categoriesSlice';
+import {
+  loadBudgets,
+  createBudget as createBudgetThunk,
+  updateBudget as updateBudgetThunk,
+  deleteBudget as deleteBudgetThunk,
+} from '@/store/thunks/budgetThunks';
 
 interface BudgetsState {
   budgets: Budget[];
@@ -10,41 +16,7 @@ interface BudgetsState {
 }
 
 const initialState: BudgetsState = {
-  budgets: [
-    {
-      id: '1',
-      category: 'Food',
-      budgetedAmount: 500.0,
-      spentAmount: 245.67,
-      period: 'monthly',
-      currency: 'USD',
-      alertThreshold: 80,
-      createdAt: '2024-01-01T00:00:00Z',
-      updatedAt: '2024-01-15T00:00:00Z',
-    },
-    {
-      id: '2',
-      category: 'Transportation',
-      budgetedAmount: 300.0,
-      spentAmount: 125.0,
-      period: 'monthly',
-      currency: 'USD',
-      alertThreshold: 75,
-      createdAt: '2024-01-01T00:00:00Z',
-      updatedAt: '2024-01-10T00:00:00Z',
-    },
-    {
-      id: '3',
-      category: 'Entertainment',
-      budgetedAmount: 200.0,
-      spentAmount: 189.99,
-      period: 'monthly',
-      currency: 'USD',
-      alertThreshold: 90,
-      createdAt: '2024-01-01T00:00:00Z',
-      updatedAt: '2024-01-20T00:00:00Z',
-    },
-  ],
+  budgets: [],
   loading: false,
   error: null,
 };
@@ -154,6 +126,61 @@ const budgetsSlice = createSlice({
         } else {
           state.budgets = state.budgets.filter(budget => budget.category !== removedCategory.name);
         }
+      })
+      // loadBudgets
+      .addCase(loadBudgets.pending, state => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(loadBudgets.fulfilled, (state, action) => {
+        state.loading = false;
+        state.budgets = action.payload;
+      })
+      .addCase(loadBudgets.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      // createBudget
+      .addCase(createBudgetThunk.pending, state => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(createBudgetThunk.fulfilled, (state, action) => {
+        state.loading = false;
+        state.budgets.push(action.payload);
+      })
+      .addCase(createBudgetThunk.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      // updateBudget
+      .addCase(updateBudgetThunk.pending, state => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateBudgetThunk.fulfilled, (state, action) => {
+        state.loading = false;
+        const index = state.budgets.findIndex(b => b.id === action.payload.id);
+        if (index !== -1) {
+          state.budgets[index] = action.payload;
+        }
+      })
+      .addCase(updateBudgetThunk.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      // deleteBudget
+      .addCase(deleteBudgetThunk.pending, state => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteBudgetThunk.fulfilled, (state, action) => {
+        state.loading = false;
+        state.budgets = state.budgets.filter(b => b.id !== action.payload);
+      })
+      .addCase(deleteBudgetThunk.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
       });
   },
 });

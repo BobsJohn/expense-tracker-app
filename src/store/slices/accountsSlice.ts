@@ -1,6 +1,13 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {Account} from '@/types';
 import {executeTransfer} from '@/store/actions/transfers';
+import {
+  loadAccounts,
+  createAccount,
+  updateAccount,
+  deleteAccount,
+  updateAccountBalance,
+} from '@/store/thunks/accountThunks';
 
 interface AccountsState {
   accounts: Account[];
@@ -9,35 +16,7 @@ interface AccountsState {
 }
 
 const initialState: AccountsState = {
-  accounts: [
-    {
-      id: '1',
-      name: 'Main Checking',
-      type: 'checking',
-      balance: 2500.0,
-      currency: 'USD',
-      createdAt: '2023-12-01T08:00:00Z',
-      updatedAt: '2024-01-15T08:00:00Z',
-    },
-    {
-      id: '2',
-      name: 'Savings Account',
-      type: 'savings',
-      balance: 15000.0,
-      currency: 'USD',
-      createdAt: '2023-10-10T08:00:00Z',
-      updatedAt: '2024-01-10T08:00:00Z',
-    },
-    {
-      id: '3',
-      name: 'Credit Card',
-      type: 'credit',
-      balance: -850.0,
-      currency: 'USD',
-      createdAt: '2023-11-05T08:00:00Z',
-      updatedAt: '2024-01-18T08:00:00Z',
-    },
-  ],
+  accounts: [],
   loading: false,
   error: null,
 };
@@ -60,7 +39,7 @@ const accountsSlice = createSlice({
         updatedAt: action.payload.updatedAt ?? now,
       });
     },
-    updateAccount: (state, action: PayloadAction<Account>) => {
+    updateAccountLocal: (state, action: PayloadAction<Account>) => {
       const index = state.accounts.findIndex(acc => acc.id === action.payload.id);
       if (index !== -1) {
         state.accounts[index] = {
@@ -69,10 +48,10 @@ const accountsSlice = createSlice({
         };
       }
     },
-    deleteAccount: (state, action: PayloadAction<string>) => {
+    deleteAccountLocal: (state, action: PayloadAction<string>) => {
       state.accounts = state.accounts.filter(acc => acc.id !== action.payload);
     },
-    updateAccountBalance: (state, action: PayloadAction<{accountId: string; amount: number}>) => {
+    updateAccountBalanceLocal: (state, action: PayloadAction<{accountId: string; amount: number}>) => {
       const account = state.accounts.find(acc => acc.id === action.payload.accountId);
       if (account) {
         account.balance += action.payload.amount;
@@ -81,25 +60,90 @@ const accountsSlice = createSlice({
     },
   },
   extraReducers: builder => {
-    builder.addCase(executeTransfer, (state, action) => {
-      const {sourceAccountId, destinationAccountId, amount, timestamp} = action.payload;
-      if (amount <= 0) {
-        return;
-      }
+    builder
+      // loadAccounts
+      .addCase(loadAccounts.pending, state => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(loadAccounts.fulfilled, (state, action) => {
+        state.loading = false;
+        state.accounts = action.payload;
+      })
+      .addCase(loadAccounts.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      // createAccount
+      .addCase(createAccount.pending, state => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(createAccount.fulfilled, (state, action) => {
+        state.loading = false;
+        state.accounts.push(action.payload);
+      })
+      .addCase(createAccount.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      // updateAccount
+      .addCase(updateAccount.pending, state => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateAccount.fulfilled, (state, action) => {
+        state.loading = false;
+        const index = state.accounts.findIndex(acc => acc.id === action.payload.id);
+        if (index !== -1) {
+          state.accounts[index] = action.payload;
+        }
+      })
+      .addCase(updateAccount.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      // deleteAccount
+      .addCase(deleteAccount.pending, state => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteAccount.fulfilled, (state, action) => {
+        state.loading = false;
+        state.accounts = state.accounts.filter(acc => acc.id !== action.payload);
+      })
+      .addCase(deleteAccount.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      // updateAccountBalance
+      .addCase(updateAccountBalance.fulfilled, (state, action) => {
+        const account = state.accounts.find(acc => acc.id === action.payload.accountId);
+        if (account) {
+          account.balance = action.payload.balance;
+          account.updatedAt = new Date().toISOString();
+        }
+      })
+      // executeTransfer
+      .addCase(executeTransfer, (state, action) => {
+        const {sourceAccountId, destinationAccountId, amount, timestamp} = action.payload;
+        if (amount <= 0) {
+          return;
+        }
 
-      const sourceAccount = state.accounts.find(acc => acc.id === sourceAccountId);
-      const destinationAccount = state.accounts.find(acc => acc.id === destinationAccountId);
+        const sourceAccount = state.accounts.find(acc => acc.id === sourceAccountId);
+        const destinationAccount = state.accounts.find(acc => acc.id === destinationAccountId);
 
-      if (sourceAccount) {
-        sourceAccount.balance -= amount;
-        sourceAccount.updatedAt = timestamp;
-      }
+        if (sourceAccount) {
+          sourceAccount.balance -= amount;
+          sourceAccount.updatedAt = timestamp;
+        }
 
-      if (destinationAccount) {
-        destinationAccount.balance += amount;
-        destinationAccount.updatedAt = timestamp;
-      }
-    });
+        if (destinationAccount) {
+          destinationAccount.balance += amount;
+          destinationAccount.updatedAt = timestamp;
+        }
+      });
   },
 });
 
@@ -107,9 +151,9 @@ export const {
   setLoading,
   setError,
   addAccount,
-  updateAccount,
-  deleteAccount,
-  updateAccountBalance,
+  updateAccountLocal,
+  deleteAccountLocal,
+  updateAccountBalanceLocal,
 } = accountsSlice.actions;
 
 export default accountsSlice.reducer;

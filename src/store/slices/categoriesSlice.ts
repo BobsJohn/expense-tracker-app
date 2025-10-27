@@ -1,6 +1,12 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 import {Category, CategoryType} from '@/types';
+import {
+  loadCategories,
+  createCategory as createCategoryThunk,
+  updateCategory as updateCategoryThunk,
+  deleteCategory as deleteCategoryThunk,
+} from '@/store/thunks/categoryThunks';
 
 const createDefaultCategory = (
   id: string,
@@ -67,7 +73,7 @@ interface CategoriesState {
 }
 
 const initialState: CategoriesState = {
-  categories: DEFAULT_CATEGORIES,
+  categories: [],
   loading: false,
   error: null,
 };
@@ -168,6 +174,65 @@ const categoriesSlice = createSlice({
       state.categories.splice(index, 1);
       state.error = null;
     },
+  },
+  extraReducers: builder => {
+    builder
+      // loadCategories
+      .addCase(loadCategories.pending, state => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(loadCategories.fulfilled, (state, action) => {
+        state.loading = false;
+        state.categories = action.payload;
+      })
+      .addCase(loadCategories.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      // createCategory
+      .addCase(createCategoryThunk.pending, state => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(createCategoryThunk.fulfilled, (state, action) => {
+        state.loading = false;
+        state.categories.push(action.payload);
+      })
+      .addCase(createCategoryThunk.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      // updateCategory
+      .addCase(updateCategoryThunk.pending, state => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateCategoryThunk.fulfilled, (state, action) => {
+        state.loading = false;
+        const {id, updates, previous} = action.payload;
+        const index = state.categories.findIndex(c => c.id === id);
+        if (index !== -1) {
+          state.categories[index] = {...previous, ...updates};
+        }
+      })
+      .addCase(updateCategoryThunk.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      // deleteCategory
+      .addCase(deleteCategoryThunk.pending, state => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteCategoryThunk.fulfilled, (state, action) => {
+        state.loading = false;
+        state.categories = state.categories.filter(c => c.id !== action.payload.id);
+      })
+      .addCase(deleteCategoryThunk.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      });
   },
 });
 
