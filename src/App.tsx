@@ -1,38 +1,51 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StatusBar} from 'react-native';
-import {Provider} from 'react-redux';
-import {PersistGate} from 'redux-persist/integration/react';
+import {Provider, useDispatch} from 'react-redux';
 import Toast from 'react-native-toast-message';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 
-import {store, persistor} from '@/store';
+import {store, AppDispatch} from '@/store';
+import {initializeApp} from '@/store/thunks/initThunks';
 import AppNavigator from '@/navigation/AppNavigator';
 import ErrorBoundary from '@/components/common/ErrorBoundary';
 import LoadingSpinner from '@/components/common/LoadingSpinner';
 import BudgetAlertProvider from '@/components/common/BudgetAlertProvider';
-import {initDatabase} from '@/services/databaseService';
 import '@/localization/i18n';
 
-const App: React.FC = () => {
+// 应用初始化包装组件
+const AppInitializer: React.FC<{children: React.ReactNode}> = ({children}) => {
+  const dispatch = useDispatch<AppDispatch>();
+  const [isInitialized, setIsInitialized] = useState(false);
+
   useEffect(() => {
-    const initDB = async () => {
+    const init = async () => {
       try {
-        await initDatabase();
-        console.log('Database initialized successfully');
+        await dispatch(initializeApp()).unwrap();
+        setIsInitialized(true);
       } catch (error) {
-        console.error('Failed to initialize database:', error);
+        console.error('应用初始化失败:', error);
+        // 即使失败也显示应用，避免白屏
+        setIsInitialized(true);
       }
     };
 
-    initDB();
-  }, []);
+    init();
+  }, [dispatch]);
 
+  if (!isInitialized) {
+    return <LoadingSpinner />;
+  }
+
+  return <>{children}</>;
+};
+
+const App: React.FC = () => {
   return (
     <GestureHandlerRootView style={{flex: 1}}>
       <SafeAreaProvider>
         <Provider store={store}>
-          <PersistGate loading={<LoadingSpinner />} persistor={persistor}>
+          <AppInitializer>
             <ErrorBoundary>
               <BudgetAlertProvider>
                 <StatusBar barStyle="dark-content" backgroundColor="#FFF" />
@@ -40,7 +53,7 @@ const App: React.FC = () => {
                 <Toast />
               </BudgetAlertProvider>
             </ErrorBoundary>
-          </PersistGate>
+          </AppInitializer>
         </Provider>
       </SafeAreaProvider>
     </GestureHandlerRootView>

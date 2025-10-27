@@ -2,7 +2,13 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 import {Transaction} from '@/types';
 import {executeTransfer} from '@/store/actions/transfers';
-import {updateCategory, deleteCategory} from './categoriesSlice';
+import {updateCategory as updateCategoryAction, deleteCategory as deleteCategoryAction} from './categoriesSlice';
+import {
+  loadTransactions,
+  createTransaction,
+  updateTransaction as updateTransactionThunk,
+  deleteTransaction as deleteTransactionThunk,
+} from '@/store/thunks/transactionThunks';
 
 interface TransactionsState {
   transactions: Transaction[];
@@ -11,35 +17,7 @@ interface TransactionsState {
 }
 
 const initialState: TransactionsState = {
-  transactions: [
-    {
-      id: '1',
-      accountId: '1',
-      amount: -45.67,
-      category: 'Food',
-      description: 'Grocery shopping',
-      date: '2024-01-15',
-      type: 'expense',
-    },
-    {
-      id: '2',
-      accountId: '1',
-      amount: 2500.0,
-      category: 'Salary',
-      description: 'Monthly salary',
-      date: '2024-01-01',
-      type: 'income',
-    },
-    {
-      id: '3',
-      accountId: '2',
-      amount: 500.0,
-      category: 'Transfer',
-      description: 'Monthly savings',
-      date: '2024-01-02',
-      type: 'income',
-    },
-  ],
+  transactions: [],
   loading: false,
   error: null,
 };
@@ -72,6 +50,62 @@ const transactionsSlice = createSlice({
   },
   extraReducers: builder => {
     builder
+      // loadTransactions
+      .addCase(loadTransactions.pending, state => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(loadTransactions.fulfilled, (state, action) => {
+        state.loading = false;
+        state.transactions = action.payload;
+      })
+      .addCase(loadTransactions.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      // createTransaction
+      .addCase(createTransaction.pending, state => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(createTransaction.fulfilled, (state, action) => {
+        state.loading = false;
+        state.transactions.unshift(action.payload.transaction);
+      })
+      .addCase(createTransaction.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      // updateTransaction
+      .addCase(updateTransactionThunk.pending, state => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateTransactionThunk.fulfilled, (state, action) => {
+        state.loading = false;
+        const index = state.transactions.findIndex(tx => tx.id === action.payload.id);
+        if (index !== -1) {
+          state.transactions[index] = action.payload;
+        }
+      })
+      .addCase(updateTransactionThunk.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      // deleteTransaction
+      .addCase(deleteTransactionThunk.pending, state => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteTransactionThunk.fulfilled, (state, action) => {
+        state.loading = false;
+        state.transactions = state.transactions.filter(tx => tx.id !== action.payload);
+      })
+      .addCase(deleteTransactionThunk.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      // executeTransfer
       .addCase(executeTransfer, (state, action) => {
         const {
           transferId,
@@ -117,7 +151,8 @@ const transactionsSlice = createSlice({
         state.transactions.unshift(outgoing);
         state.transactions.unshift(incoming);
       })
-      .addCase(updateCategory, (state, action) => {
+      // updateCategory
+      .addCase(updateCategoryAction, (state, action) => {
         const {previous, updates} = action.payload;
         const newName = updates.name.trim();
         const nameChanged = previous.name !== newName;
@@ -142,7 +177,8 @@ const transactionsSlice = createSlice({
           };
         });
       })
-      .addCase(deleteCategory, (state, action) => {
+      // deleteCategory
+      .addCase(deleteCategoryAction, (state, action) => {
         const {category, reassignmentCategory} = action.payload;
 
         if (!category) {

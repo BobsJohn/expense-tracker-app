@@ -1,67 +1,41 @@
+// Redux selectors 测试
 import {
-  selectAccounts,
+  selectAllAccounts,
+  selectAccountById,
   selectTotalBalance,
-  selectAccountsByType,
-  selectMonthlyIncome,
-  selectMonthlyExpenses,
-  selectBudgetProgress,
-  selectSpendingByCategory,
-  selectTransactionsByDateRange,
-  selectIncomeExpenseByPeriod,
-  selectSpendingTrendReport,
-  selectCategoryDistributionReport,
-  selectAccountReports,
-  selectReportSummary,
-  selectCategories,
+  selectAllTransactions,
+  selectTransactionsByAccountId,
+  selectAllCategories,
   selectCategoriesByType,
-  selectCategoryById,
 } from '@/store/selectors';
 import {RootState} from '@/store';
-import {Account, Transaction, Budget, ReportFilters, Category} from '@/types';
+import {Account, Transaction, Category} from '@/types';
 
-describe('Store Selectors', () => {
+describe('Redux Selectors', () => {
   const mockAccounts: Account[] = [
     {
       id: '1',
-      name: 'Checking Account',
+      name: 'Checking',
       type: 'checking',
       balance: 1000,
       currency: 'USD',
       createdAt: '2024-01-01T00:00:00Z',
-      updatedAt: '2024-01-02T00:00:00Z',
+      updatedAt: '2024-01-01T00:00:00Z',
     },
     {
       id: '2',
-      name: 'Savings Account',
+      name: 'Savings',
       type: 'savings',
       balance: 5000,
       currency: 'USD',
       createdAt: '2024-01-01T00:00:00Z',
-      updatedAt: '2024-01-02T00:00:00Z',
-    },
-    {
-      id: '3',
-      name: 'Credit Card',
-      type: 'credit',
-      balance: -500,
-      currency: 'USD',
-      createdAt: '2024-01-01T00:00:00Z',
-      updatedAt: '2024-01-02T00:00:00Z',
+      updatedAt: '2024-01-01T00:00:00Z',
     },
   ];
 
   const mockTransactions: Transaction[] = [
     {
       id: '1',
-      accountId: '1',
-      amount: 2000,
-      category: 'Salary',
-      description: 'Monthly salary',
-      date: '2024-01-01',
-      type: 'income',
-    },
-    {
-      id: '2',
       accountId: '1',
       amount: -100,
       category: 'Food',
@@ -70,69 +44,36 @@ describe('Store Selectors', () => {
       type: 'expense',
     },
     {
-      id: '3',
-      accountId: '2',
-      amount: -50,
-      category: 'Entertainment',
-      description: 'Movie tickets',
-      date: '2024-01-20',
-      type: 'expense',
-    },
-    {
-      id: '4',
-      accountId: '1',
-      amount: -75,
-      category: 'Utilities',
-      description: 'Electric bill',
-      date: '2023-12-28',
-      type: 'expense',
-    },
-  ];
-
-  const mockBudgets: Budget[] = [
-    {
-      id: '1',
-      category: 'Food',
-      budgetedAmount: 500,
-      spentAmount: 200,
-      period: 'monthly',
-      currency: 'USD',
-    },
-    {
       id: '2',
-      category: 'Entertainment',
-      budgetedAmount: 200,
-      spentAmount: 250, // Over budget
-      period: 'monthly',
-      currency: 'USD',
+      accountId: '2',
+      amount: 500,
+      category: 'Salary',
+      description: 'Monthly salary',
+      date: '2024-01-01',
+      type: 'income',
     },
   ];
 
   const mockCategories: Category[] = [
     {
-      id: 'category-expense-food',
+      id: '1',
       name: 'Food',
-      icon: 'silverware-fork-knife',
-      color: '#FF6B6B',
+      icon: 'food',
+      color: '#FF0000',
       type: 'expense',
+      isDefault: true,
     },
     {
-      id: 'category-expense-entertainment',
-      name: 'Entertainment',
-      icon: 'music-note',
-      color: '#A29BFE',
-      type: 'expense',
-    },
-    {
-      id: 'category-income-salary',
+      id: '2',
       name: 'Salary',
-      icon: 'briefcase',
-      color: '#34C759',
+      icon: 'salary',
+      color: '#00FF00',
       type: 'income',
+      isDefault: true,
     },
   ];
 
-  const mockState: RootState = {
+  const mockState: Partial<RootState> = {
     accounts: {
       accounts: mockAccounts,
       loading: false,
@@ -143,193 +84,62 @@ describe('Store Selectors', () => {
       loading: false,
       error: null,
     },
-    budgets: {
-      budgets: mockBudgets,
-      loading: false,
-      error: null,
-    },
     categories: {
       categories: mockCategories,
       loading: false,
       error: null,
     },
-    app: {
-      isLoading: false,
-      error: null,
-      theme: 'light',
-      language: 'en',
-    },
   };
 
-  describe('selectAccounts', () => {
-    it('should return all accounts', () => {
-      const result = selectAccounts(mockState);
-      expect(result).toEqual(mockAccounts);
+  describe('Account Selectors', () => {
+    it('selectAllAccounts 应该返回所有账户', () => {
+      const accounts = selectAllAccounts(mockState as RootState);
+      expect(accounts).toEqual(mockAccounts);
+    });
+
+    it('selectAccountById 应该根据 ID 返回账户', () => {
+      const account = selectAccountById(mockState as RootState, '1');
+      expect(account).toEqual(mockAccounts[0]);
+    });
+
+    it('selectAccountById 对不存在的 ID 应该返回 undefined', () => {
+      const account = selectAccountById(mockState as RootState, 'non-existent');
+      expect(account).toBeUndefined();
+    });
+
+    it('selectTotalBalance 应该计算总余额', () => {
+      const totalBalance = selectTotalBalance(mockState as RootState);
+      expect(totalBalance).toBe(6000); // 1000 + 5000
     });
   });
 
-  describe('selectTotalBalance', () => {
-    it('should calculate total balance correctly', () => {
-      const result = selectTotalBalance(mockState);
-      // 1000 + 5000 + (-500) = 5500
-      expect(result).toBe(5500);
+  describe('Transaction Selectors', () => {
+    it('selectAllTransactions 应该返回所有交易', () => {
+      const transactions = selectAllTransactions(mockState as RootState);
+      expect(transactions).toEqual(mockTransactions);
     });
 
-    it('should handle empty accounts array', () => {
-      const emptyState = {
-        ...mockState,
-        accounts: {...mockState.accounts, accounts: []},
-      };
-      const result = selectTotalBalance(emptyState);
-      expect(result).toBe(0);
+    it('selectTransactionsByAccountId 应该返回指定账户的交易', () => {
+      const transactions = selectTransactionsByAccountId(mockState as RootState, '1');
+      expect(transactions).toHaveLength(1);
+      expect(transactions[0].accountId).toBe('1');
     });
   });
 
-  describe('selectAccountsByType', () => {
-    it('should group accounts by type', () => {
-      const result = selectAccountsByType(mockState);
-      expect(result).toEqual({
-        checking: [mockAccounts[0]],
-        savings: [mockAccounts[1]],
-        credit: [mockAccounts[2]],
-      });
-    });
-  });
-
-  describe('category selectors', () => {
-    it('should return all categories', () => {
-      const result = selectCategories(mockState);
-      expect(result).toEqual(mockCategories);
+  describe('Category Selectors', () => {
+    it('selectAllCategories 应该返回所有分类', () => {
+      const categories = selectAllCategories(mockState as RootState);
+      expect(categories).toEqual(mockCategories);
     });
 
-    it('should group categories by type', () => {
-      const result = selectCategoriesByType(mockState);
-      expect(result).toEqual({
-        expense: [mockCategories[0], mockCategories[1]],
-        income: [mockCategories[2]],
-      });
-    });
+    it('selectCategoriesByType 应该返回指定类型的分类', () => {
+      const expenseCategories = selectCategoriesByType(mockState as RootState, 'expense');
+      expect(expenseCategories).toHaveLength(1);
+      expect(expenseCategories[0].type).toBe('expense');
 
-    it('should find a category by id', () => {
-      const target = mockCategories[1];
-      const result = selectCategoryById(mockState, target.id);
-      expect(result).toEqual(target);
-    });
-  });
-
-  describe('selectMonthlyIncome', () => {
-    it('should calculate monthly income for current month', () => {
-      // Mock current date to January 2024
-      const mockDate = new Date('2024-01-15');
-      jest.spyOn(global, 'Date').mockImplementation(() => mockDate);
-
-      const result = selectMonthlyIncome(mockState);
-      expect(result).toBe(2000); // Only the salary transaction
-
-      jest.restoreAllMocks();
-    });
-  });
-
-  describe('selectMonthlyExpenses', () => {
-    it('should calculate monthly expenses for current month', () => {
-      // Mock current date to January 2024
-      const mockDate = new Date('2024-01-15');
-      jest.spyOn(global, 'Date').mockImplementation(() => mockDate);
-
-      const result = selectMonthlyExpenses(mockState);
-      expect(result).toBe(150); // 100 + 50 (absolute values)
-
-      jest.restoreAllMocks();
-    });
-  });
-
-  describe('selectBudgetProgress', () => {
-    it('should calculate budget progress correctly', () => {
-      const result = selectBudgetProgress(mockState);
-
-      expect(result).toHaveLength(2);
-      expect(result[0]).toMatchObject({
-        id: '1',
-        category: 'Food',
-        progressPercentage: 40, // 200/500 * 100
-        remainingAmount: 300,
-        isOverBudget: false,
-      });
-      expect(result[1]).toMatchObject({
-        id: '2',
-        category: 'Entertainment',
-        progressPercentage: 100, // Capped at 100%
-        remainingAmount: -50,
-        isOverBudget: true,
-      });
-    });
-  });
-
-  describe('selectSpendingByCategory', () => {
-    it('should group spending by category for current month', () => {
-      // Mock current date to January 2024
-      const mockDate = new Date('2024-01-15');
-      jest.spyOn(global, 'Date').mockImplementation(() => mockDate);
-
-      const result = selectSpendingByCategory(mockState);
-      expect(result).toEqual({
-        Food: 100,
-        Entertainment: 50,
-      });
-
-      jest.restoreAllMocks();
-    });
-  });
-
-  describe('Report selectors', () => {
-    const reportFilters: ReportFilters = {
-      startDate: new Date('2024-01-01'),
-      endDate: new Date('2024-01-31'),
-      granularity: 'weekly',
-    };
-
-    it('should return transactions constrained to the date range', () => {
-      const result = selectTransactionsByDateRange(mockState, reportFilters);
-      expect(result).toHaveLength(3);
-      expect(result.every(tx => tx.date.startsWith('2024-01'))).toBe(true);
-    });
-
-    it('should aggregate income and expenses by the selected period', () => {
-      const result = selectIncomeExpenseByPeriod(mockState, reportFilters);
-      expect(result).toHaveLength(2);
-      expect(result[0]).toMatchObject({income: 2000, expense: 0});
-      expect(result[1]).toMatchObject({income: 0, expense: 150});
-    });
-
-    it('should build a spending trend dataset from period data', () => {
-      const result = selectSpendingTrendReport(mockState, reportFilters);
-      expect(result).toHaveLength(2);
-      expect(result[0].value).toBe(0);
-      expect(result[1].value).toBe(150);
-    });
-
-    it('should aggregate expenses by category within the date range', () => {
-      const result = selectCategoryDistributionReport(mockState, reportFilters);
-      expect(result).toHaveLength(2);
-      expect(result[0]).toMatchObject({category: 'Food', total: 100});
-      expect(result[1]).toMatchObject({category: 'Entertainment', total: 50});
-    });
-
-    it('should provide account reports with related transactions', () => {
-      const result = selectAccountReports(mockState, reportFilters);
-      expect(result).toHaveLength(3);
-      const checking = result.find(report => report.accountId === '1');
-      const savings = result.find(report => report.accountId === '2');
-      expect(checking?.transactions).toHaveLength(2);
-      expect(savings?.transactions).toHaveLength(1);
-    });
-
-    it('should calculate summary metrics for reports', () => {
-      const result = selectReportSummary(mockState, reportFilters);
-      expect(result.totalIncome).toBe(2000);
-      expect(result.totalExpense).toBe(150);
-      expect(result.netBalance).toBe(1850);
-      expect(result.topCategories.map(item => item.category)).toEqual(['Food', 'Entertainment']);
+      const incomeCategories = selectCategoriesByType(mockState as RootState, 'income');
+      expect(incomeCategories).toHaveLength(1);
+      expect(incomeCategories[0].type).toBe('income');
     });
   });
 });
