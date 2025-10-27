@@ -9,7 +9,8 @@ A comprehensive React Native application for personal financial management, feat
 - **Transaction Tracking**: Record and categorize income and expenses
 - **Budget Planning**: Set and monitor budgets by category with progress tracking
 - **Financial Dashboard**: Real-time overview of financial health
-- **Multi-language Support**: English, Spanish, and French localization
+- **Multi-language Support**: English, Chinese, Spanish, and French localization
+- **Theme Customization**: Light/Dark mode support with automatic persistence
 
 ### User Experience
 - **Responsive Design**: Optimized for both phones and tablets

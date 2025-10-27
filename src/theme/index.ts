@@ -2,6 +2,6 @@
  * 主题模块导出
  */
 
-export {theme} from './theme';
-export type {Theme} from './theme';
+export {theme, lightTheme, darkTheme} from './theme';
+export type {Theme, ThemeMode} from './theme';
 export {ThemeProvider, useTheme} from './ThemeContext';

@@ -3,50 +3,94 @@
  * 定义颜色、字体、间距等设计标准
  */
 
-export const theme = {
-  // 颜色配置
-  colors: {
+// 浅色主题配色
+export const lightColors = {
+  primary: '#007AFF',
+  primaryDark: '#0051D5',
+  primaryLight: '#4DA2FF',
+  secondary: '#5856D6',
+  success: '#34C759',
+  warning: '#FF9500',
+  danger: '#FF3B30',
+  error: '#FF3B30',
+  info: '#5AC8FA',
+
+  // 文本颜色
+  textPrimary: '#000000',
+  textSecondary: '#8E8E93',
+  textTertiary: '#C7C7CC',
+  textDisabled: '#AEAEB2',
+  textOnPrimary: '#FFFFFF',
+
+  // 背景颜色
+  background: '#FFFFFF',
+  backgroundSecondary: '#F2F2F7',
+  backgroundTertiary: '#E5E5EA',
+
+  // 边框颜色
+  border: '#C6C6C8',
+  borderLight: '#E5E5EA',
+
+  // 特殊用途颜色
+  overlay: 'rgba(0, 0, 0, 0.5)',
+  shadow: 'rgba(0, 0, 0, 0.1)',
+
+  // 图表颜色
+  chart: {
     primary: '#007AFF',
-    primaryDark: '#0051D5',
-    primaryLight: '#4DA2FF',
     secondary: '#5856D6',
-    success: '#34C759',
-    warning: '#FF9500',
-    danger: '#FF3B30',
-    error: '#FF3B30',
-    info: '#5AC8FA',
-    
-    // 文本颜色
-    textPrimary: '#000000',
-    textSecondary: '#8E8E93',
-    textTertiary: '#C7C7CC',
-    textDisabled: '#AEAEB2',
-    textOnPrimary: '#FFFFFF',
-    
-    // 背景颜色
-    background: '#FFFFFF',
-    backgroundSecondary: '#F2F2F7',
-    backgroundTertiary: '#E5E5EA',
-    
-    // 边框颜色
-    border: '#C6C6C8',
-    borderLight: '#E5E5EA',
-    
-    // 特殊用途颜色
-    overlay: 'rgba(0, 0, 0, 0.5)',
-    shadow: 'rgba(0, 0, 0, 0.1)',
-    
-    // 图表颜色
-    chart: {
-      primary: '#007AFF',
-      secondary: '#5856D6',
-      tertiary: '#34C759',
-      quaternary: '#FF9500',
-      quinary: '#FF3B30',
-      senary: '#5AC8FA',
-    },
+    tertiary: '#34C759',
+    quaternary: '#FF9500',
+    quinary: '#FF3B30',
+    senary: '#5AC8FA',
   },
-  
+};
+
+// 深色主题配色
+export const darkColors = {
+  primary: '#0A84FF',
+  primaryDark: '#409CFF',
+  primaryLight: '#0055FF',
+  secondary: '#5E5CE6',
+  success: '#30D158',
+  warning: '#FF9F0A',
+  danger: '#FF453A',
+  error: '#FF453A',
+  info: '#64D2FF',
+
+  // 文本颜色
+  textPrimary: '#FFFFFF',
+  textSecondary: '#98989D',
+  textTertiary: '#48484A',
+  textDisabled: '#636366',
+  textOnPrimary: '#000000',
+
+  // 背景颜色
+  background: '#000000',
+  backgroundSecondary: '#1C1C1E',
+  backgroundTertiary: '#2C2C2E',
+
+  // 边框颜色
+  border: '#38383A',
+  borderLight: '#48484A',
+
+  // 特殊用途颜色
+  overlay: 'rgba(0, 0, 0, 0.7)',
+  shadow: 'rgba(0, 0, 0, 0.3)',
+
+  // 图表颜色
+  chart: {
+    primary: '#0A84FF',
+    secondary: '#5E5CE6',
+    tertiary: '#30D158',
+    quaternary: '#FF9F0A',
+    quinary: '#FF453A',
+    senary: '#64D2FF',
+  },
+};
+
+// 通用主题配置（不受主题模式影响）
+const common = {
   // 字体配置
   typography: {
     fontFamily: {
@@ -75,7 +119,7 @@ export const theme = {
       relaxed: 1.8,
     },
   },
-  
+
   // 间距配置
   spacing: {
     xs: 4,
@@ -85,7 +129,7 @@ export const theme = {
     xl: 32,
     xxl: 48,
   },
-  
+
   // 圆角配置
   borderRadius: {
     none: 0,
@@ -95,7 +139,7 @@ export const theme = {
     xl: 16,
     full: 9999,
   },
-  
+
   // 阴影配置
   shadows: {
     none: {
@@ -127,7 +171,7 @@ export const theme = {
       elevation: 8,
     },
   },
-  
+
   // 尺寸配置
   sizes: {
     icon: {
@@ -152,7 +196,7 @@ export const theme = {
       },
     },
   },
-  
+
   // 动画配置
   animation: {
     duration: {
@@ -163,4 +207,18 @@ export const theme = {
   },
 };
 
-export type Theme = typeof theme;
+// 创建完整主题对象
+export const createTheme = (colors: typeof lightColors) => ({
+  colors,
+  ...common,
+});
+
+// 导出浅色和深色主题
+export const lightTheme = createTheme(lightColors);
+export const darkTheme = createTheme(darkColors);
+
+// 默认主题（浅色）
+export const theme = lightTheme;
+
+export type Theme = typeof lightTheme;
+export type ThemeMode = 'light' | 'dark';
