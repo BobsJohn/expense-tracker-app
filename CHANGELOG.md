@@ -1,133 +1,305 @@
-# Changelog
+# 更新日志
 
-All notable changes to this project will be documented in this file.
+本文件记录项目的所有重要变更。
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+本项目遵循[语义化版本](https://semver.org/lang/zh-CN/)规范，更新日志格式基于[Keep a Changelog](https://keepachangelog.com/zh-CN/1.0.0/)。
 
 ## [1.0.0] - 2024-01-22
 
-### Added
-- **Core Financial Features**
-  - Account management with support for checking, savings, credit card, and investment accounts
-  - Transaction tracking with categorization and type classification (income/expense)
-  - Budget creation and monitoring with progress tracking
-  - Real-time financial dashboard with key metrics
+### 新增功能
 
-- **User Interface**
-  - Clean, intuitive Material Design-inspired UI
-  - Responsive design optimized for mobile devices
-  - Card-based layout for easy information consumption
-  - Progress bars for budget tracking visualization
+#### 核心财务功能
+- **账户管理**：支持支票账户、储蓄账户、信用卡和投资账户
+- **交易追踪**：记录和分类收入与支出交易
+- **预算管理**：创建和监控预算，实时进度追踪
+- **财务面板**：显示关键财务指标的实时面板
 
-- **State Management**
-  - Redux Toolkit for predictable state management
-  - Redux Persist for data persistence across app sessions
-  - Memoized selectors for optimized performance
-  - Comprehensive error and loading state handling
+#### 用户界面
+- **简洁直观的 UI**：采用 Material Design 风格设计
+- **响应式设计**：针对移动设备优化
+- **卡片式布局**：易于浏览和理解信息
+- **进度条可视化**：直观显示预算使用情况
 
-- **Internationalization**
-  - Multi-language support (English, Spanish, French)
-  - Automatic device language detection
-  - Consistent translation keys across all screens
-  - Currency formatting based on locale
+#### 状态管理
+- **Redux Toolkit**：可预测的状态管理
+- **Redux Persist**：跨会话的数据持久化
+- **记忆化选择器**：优化性能的选择器
+- **完善的错误和加载状态处理**
 
-- **Performance Optimizations**
-  - Virtual list rendering for large datasets
-  - Component memoization to prevent unnecessary re-renders
-  - Optimized selector calculations
-  - Efficient state updates with Redux Toolkit
+#### 国际化
+- **多语言支持**：英语、西班牙语、法语
+- **自动语言检测**：检测设备语言
+- **一致的翻译键**：所有屏幕统一的翻译管理
+- **本地化货币格式**：根据语言环境格式化货币
 
-- **User Experience Enhancements**
-  - Haptic feedback on key interactions
-  - Toast notifications for user feedback
-  - Smooth loading states throughout the app
-  - Error boundaries for graceful error handling
+#### 性能优化
+- **虚拟列表**：大数据集的高效渲染
+- **组件记忆化**：防止不必要的重渲染
+- **优化的选择器计算**：使用 reselect 缓存计算结果
+- **高效的状态更新**：利用 Redux Toolkit 的不可变更新
 
-- **Developer Experience**
-  - Comprehensive TypeScript typing
-  - ESLint and Prettier configuration
-  - Path aliases for clean imports
-  - Detailed code documentation
+#### 用户体验增强
+- **触觉反馈**：关键交互提供触觉反馈
+- **Toast 通知**：友好的用户反馈提示
+- **流畅的加载状态**：应用全局的加载指示器
+- **错误边界**：优雅的错误处理机制
 
-- **Testing Infrastructure**
-  - Jest unit tests for critical business logic
-  - React Native Testing Library for component testing
-  - Comprehensive test coverage for selectors and utilities
-  - Mock implementations for external dependencies
+#### 开发者体验
+- **全面的 TypeScript 类型**：类型安全的代码库
+- **ESLint 和 Prettier**：代码质量和格式化配置
+- **路径别名**：清晰的导入语句
+- **详细的代码文档**：代码注释和说明
 
-- **Navigation**
-  - Bottom tab navigation for main sections
-  - Stack navigation for detailed views
-  - Type-safe navigation with TypeScript
-  - Consistent header styling across screens
+#### 测试基础设施
+- **Jest 单元测试**：关键业务逻辑的测试
+- **React Native Testing Library**：组件测试
+- **全面的测试覆盖**：选择器和工具函数的测试
+- **Mock 实现**：外部依赖的 mock
 
-### Technical Implementation
-- **Architecture**: Clean architecture with separation of concerns
-- **Performance**: Optimized rendering and state management
-- **Accessibility**: WCAG 2.1 compliant components
-- **Security**: Secure local data storage with encryption
-- **Offline Support**: Full functionality without network connection
+#### 导航系统
+- **底部标签导航**：主要功能区的快速切换
+- **堆栈导航**：详情页面的层级导航
+- **类型安全导航**：TypeScript 支持的导航参数
+- **一致的头部样式**：所有屏幕统一的样式
 
-### Testing Coverage
-- Unit tests for all utility functions
-- Integration tests for Redux store operations
-- Component tests for critical UI elements
-- Selector tests for budget calculations and account balances
+### 技术实现
 
-### Documentation
-- Comprehensive README with setup instructions
-- Architecture documentation with diagrams
-- Testing guidelines and best practices
-- Code style and contribution guidelines
+- **架构**：清晰的分层架构，关注点分离
+- **性能**：优化的渲染和状态管理
+- **无障碍访问**：符合 WCAG 2.1 标准的组件
+- **安全性**：加密的本地数据存储
+- **离线支持**：无网络连接下的完整功能
 
-## [Unreleased]
+### 测试覆盖
 
-### Added
-- **Theme System**
-  - Light/Dark mode support with seamless switching
-  - Persistent theme preferences using AsyncStorage
-  - Theme-aware components (ScreenContainer, Header, ThemedStatusBar)
-  - Automatic StatusBar style adjustment based on theme
-  - Navigation theme integration
+- 所有工具函数的单元测试
+- Redux store 操作的集成测试
+- 关键 UI 元素的组件测试
+- 预算计算和账户余额的选择器测试
 
-- **Enhanced Internationalization**
-  - Added Chinese (中文) language support
-  - Language switching from Settings screen
-  - Cyclic language selector (English → Chinese → Spanish → French)
-  - Updated translations for all screens
+### 文档
 
-- **Authentication Architecture**
-  - Auth Stack with placeholder login screen
-  - Conditional navigation based on authentication state
-  - Foundation for future authentication implementation
+- 包含安装说明的完整 README
+- 带图表的架构文档
+- 测试指南和最佳实践
+- 代码风格和贡献指南
 
-- **Shared UI Components**
-  - ScreenContainer component for consistent screen layouts
-  - Header component with theme-aware styling
-  - ThemedStatusBar for dynamic status bar appearance
+## [未发布]
 
-- **Navigation Enhancements**
-  - Restructured navigation with Auth and Main stacks
-  - Updated tab navigator with all core screens (Transactions, Accounts, Budgets, Reports, Settings)
-  - Theme-aware navigation colors and styles
+### 新增功能
 
-### Planned Features
-- Transaction import from bank files (CSV, OFX)
-- Advanced reporting and analytics
-- Recurring transaction support
-- Cloud synchronization
-- Biometric authentication
-- Tablet-optimized layouts
+#### 主题系统
+- **浅色/深色模式**：无缝切换的主题支持
+- **持久化主题偏好**：使用 AsyncStorage 保存主题设置
+- **主题感知组件**：ScreenContainer、Header、ThemedStatusBar
+- **自动状态栏调整**：根据主题自动调整状态栏样式
+- **导航主题集成**：导航系统跟随应用主题
 
-### Performance Improvements
-- Image optimization and caching
-- Background processing for calculations
-- Advanced list virtualization
-- Memory usage optimization
+#### 增强的国际化
+- **中文语言支持**：新增简体中文完整翻译
+- **语言切换功能**：从设置页面切换语言
+- **循环语言选择器**：英语 → 中文 → 西班牙语 → 法语
+- **更新的翻译**：所有屏幕的翻译已更新
 
-### User Experience
-- Advanced filtering and search
-- Customizable dashboard widgets
-- Interactive charts and graphs
-- Accessibility improvements
+#### 认证架构
+- **认证堆栈**：带占位符登录屏幕的认证流程
+- **条件导航**：基于认证状态的导航切换
+- **未来认证基础**：为完整认证实现打下基础
+
+#### 共享 UI 组件
+- **ScreenContainer**：一致的屏幕布局容器
+- **Header 组件**：主题感知的页面头部
+- **ThemedStatusBar**：动态状态栏外观
+
+#### 导航增强
+- **重构导航**：Auth 和 Main 堆栈结构
+- **更新的标签导航器**：包含所有核心屏幕（交易、账户、预算、报表、设置）
+- **主题感知导航**：导航颜色和样式跟随主题
+
+#### 组件库
+- **共享 UI 组件库**：完整的可复用组件集
+  - PrimaryButton（多种变体和尺寸）
+  - IconButton（圆形图标按钮）
+  - TextInputField（带验证的输入框）
+  - SelectPicker（模态选择器）
+  - AmountInput（金额输入）
+  - DatePickerField（日期选择器）
+  - Card（卡片容器）
+  - Chip（标签芯片）
+  - ProgressBar（进度条）
+  - SectionHeader（区块标题）
+  - EmptyState（空状态提示）
+  - LoadingOverlay（加载遮罩）
+
+#### 图表组件
+- **PieChart**：饼图/环形图
+- **BarChart**：柱状图
+- **LineChart**：折线图
+- 统一的样式和错误处理
+- 加载和错误状态支持
+
+#### 格式化工具
+- **货币格式化**：多语言货币格式支持
+- **日期格式化**：多种日期格式函数
+- **数字格式化**：百分比、紧凑数字等
+- **相对时间**：人性化的时间显示
+
+#### 表单验证
+- **Yup 模式**：预定义的验证模式
+- **React Hook Form 集成**：高性能表单处理
+- **验证工具**：通用验证规则和辅助函数
+
+#### 数据导出功能
+- **CSV 导出**：交易和预算数据导出为 CSV
+- **Excel 导出**：交易和预算数据导出为 Excel
+- **文件分享**：导出后可直接分享文件
+
+#### 数据持久化层
+- **SQLite 数据库**：完整的数据库集成
+- **仓储模式**：封装的 CRUD 操作
+- **数据库迁移**：版本化的数据库结构管理
+- **DTO 映射**：数据库和领域模型之间的转换
+- **自动数据种子**：首次运行时初始化默认数据
+
+### 改进
+
+#### 架构改进
+- 清晰的分层架构（UI、状态、业务逻辑、数据层）
+- 类型安全的数据流
+- 改进的错误处理
+- 更好的代码组织
+
+#### 性能改进
+- 记忆化选择器减少重复计算
+- 虚拟列表优化大数据集渲染
+- 组件级记忆化减少重渲染
+- 数据库查询优化和索引
+
+#### 开发者体验
+- 完善的 TypeScript 类型定义
+- 统一的代码风格（ESLint + Prettier）
+- 路径别名（@/ 前缀）
+- 详细的中文代码注释
+
+#### 文档改进
+- 架构实现文档
+- 组件库使用文档
+- 数据层使用指南
+- 使用示例和代码片段
+
+### 待开发功能
+
+#### 数据功能
+- 从银行文件导入交易（CSV、OFX）
+- 高级报表和分析
+- 循环交易支持
+- 云端同步
+
+#### 用户功能
+- 生物识别认证
+- 平板优化布局
+- 自定义仪表板小部件
+- 高级过滤和搜索
+
+#### 技术改进
+- 图片优化和缓存
+- 后台计算处理
+- 高级列表虚拟化
+- 内存使用优化
+
+#### 用户体验
+- 交互式图表
+- 无障碍访问改进
+- 动画和过渡效果
+- 暗黑模式优化
+
+## 版本说明
+
+### 版本号规则
+
+采用语义化版本号：`主版本号.次版本号.修订号`
+
+- **主版本号**：不兼容的 API 修改
+- **次版本号**：向下兼容的功能性新增
+- **修订号**：向下兼容的问题修正
+
+### 变更类型
+
+- **新增**：新功能
+- **改进**：对现有功能的改进
+- **弃用**：即将移除的功能
+- **移除**：已移除的功能
+- **修复**：问题修复
+- **安全**：安全漏洞修复
+
+## 迁移指南
+
+### 从 0.x 升级到 1.0
+
+1. 备份现有数据
+2. 更新依赖：`npm install`
+3. 重新安装 Pods（iOS）：`cd ios && pod install`
+4. 清除缓存：`npm start -- --reset-cache`
+5. 重新构建应用
+
+### 数据库迁移
+
+应用会自动处理数据库迁移。首次启动时会：
+1. 检测当前数据库版本
+2. 按顺序运行必要的迁移
+3. 更新到最新版本
+
+## 已知问题
+
+### 当前版本
+
+1. **性能**：大量交易（>1000条）时列表滚动可能略有卡顿
+   - 解决方案：正在优化虚拟列表实现
+
+2. **导出**：Excel 导出大文件可能较慢
+   - 解决方案：计划添加后台处理
+
+3. **主题**：部分第三方组件暂不支持深色模式
+   - 解决方案：逐步适配所有组件
+
+### 解决方案进度
+
+- [ ] 列表性能优化
+- [ ] 后台导出处理
+- [ ] 第三方组件主题适配
+- [ ] 平板布局优化
+
+## 贡献者
+
+感谢所有为项目做出贡献的开发者！
+
+## 反馈和支持
+
+如遇到问题或有功能建议，请：
+1. 查看[常见问题](./README.md#常见问题解答)
+2. 搜索现有的 [Issues](https://github.com/your-repo/issues)
+3. 创建新的 Issue，提供详细信息
+
+## 路线图
+
+### v1.1.0（计划中）
+- [ ] 循环交易功能
+- [ ] 高级过滤器
+- [ ] 更多图表类型
+- [ ] 导出模板自定义
+
+### v1.2.0（计划中）
+- [ ] 云端同步
+- [ ] 多设备支持
+- [ ] 数据备份和恢复
+- [ ] CSV/OFX 导入
+
+### v2.0.0（未来）
+- [ ] 重新设计的 UI
+- [ ] 高级分析功能
+- [ ] 投资组合追踪
+- [ ] 财务目标规划
+
+---
+
+最后更新：2024-01-22
