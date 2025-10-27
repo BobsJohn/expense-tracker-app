@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import {StatusBar} from 'react-native';
 import {Provider, useDispatch} from 'react-redux';
 import Toast from 'react-native-toast-message';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
@@ -11,6 +10,8 @@ import AppNavigator from '@/navigation/AppNavigator';
 import ErrorBoundary from '@/components/common/ErrorBoundary';
 import LoadingSpinner from '@/components/common/LoadingSpinner';
 import BudgetAlertProvider from '@/components/common/BudgetAlertProvider';
+import ThemedStatusBar from '@/components/common/ThemedStatusBar';
+import {ThemeProvider} from '@/theme';
 import '@/localization/i18n';
 
 // 应用初始化包装组件
@@ -44,17 +45,19 @@ const App: React.FC = () => {
   return (
     <GestureHandlerRootView style={{flex: 1}}>
       <SafeAreaProvider>
-        <Provider store={store}>
-          <AppInitializer>
-            <ErrorBoundary>
-              <BudgetAlertProvider>
-                <StatusBar barStyle="dark-content" backgroundColor="#FFF" />
-                <AppNavigator />
-                <Toast />
-              </BudgetAlertProvider>
-            </ErrorBoundary>
-          </AppInitializer>
-        </Provider>
+        <ThemeProvider>
+          <Provider store={store}>
+            <AppInitializer>
+              <ErrorBoundary>
+                <BudgetAlertProvider>
+                  <ThemedStatusBar />
+                  <AppNavigator />
+                  <Toast />
+                </BudgetAlertProvider>
+              </ErrorBoundary>
+            </AppInitializer>
+          </Provider>
+        </ThemeProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );

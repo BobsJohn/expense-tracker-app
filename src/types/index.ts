@@ -99,6 +99,7 @@ export interface AppState {
 }
 
 export type RootStackParamList = {
+  Login: undefined;
   Dashboard: undefined;
   Accounts: undefined;
   AccountDetails: {accountId: string};

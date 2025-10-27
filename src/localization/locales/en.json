@@ -12,6 +12,11 @@
     "done": "Done",
     "currency": "USD"
   },
+  "auth": {
+    "login": "Login",
+    "loginSubtitle": "Authentication placeholder screen",
+    "loginButton": "Continue to App"
+  },
   "navigation": {
     "dashboard": "Dashboard",
     "reports": "Reports",

@@ -83,14 +83,41 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **Theme System**
+  - Light/Dark mode support with seamless switching
+  - Persistent theme preferences using AsyncStorage
+  - Theme-aware components (ScreenContainer, Header, ThemedStatusBar)
+  - Automatic StatusBar style adjustment based on theme
+  - Navigation theme integration
+
+- **Enhanced Internationalization**
+  - Added Chinese (中文) language support
+  - Language switching from Settings screen
+  - Cyclic language selector (English → Chinese → Spanish → French)
+  - Updated translations for all screens
+
+- **Authentication Architecture**
+  - Auth Stack with placeholder login screen
+  - Conditional navigation based on authentication state
+  - Foundation for future authentication implementation
+
+- **Shared UI Components**
+  - ScreenContainer component for consistent screen layouts
+  - Header component with theme-aware styling
+  - ThemedStatusBar for dynamic status bar appearance
+
+- **Navigation Enhancements**
+  - Restructured navigation with Auth and Main stacks
+  - Updated tab navigator with all core screens (Transactions, Accounts, Budgets, Reports, Settings)
+  - Theme-aware navigation colors and styles
+
 ### Planned Features
 - Transaction import from bank files (CSV, OFX)
 - Advanced reporting and analytics
 - Recurring transaction support
-- Data export functionality
 - Cloud synchronization
 - Biometric authentication
-- Dark theme support
 - Tablet-optimized layouts
 
 ### Performance Improvements

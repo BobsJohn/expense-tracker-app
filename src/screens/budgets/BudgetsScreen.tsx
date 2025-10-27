@@ -14,10 +14,12 @@ import BudgetSummary from './components/BudgetSummary';
 import BudgetModal from './components/BudgetModal';
 import OverspentAlert from './components/OverspentAlert';
 import {Budget} from '@/types';
+import {useTheme} from '@/theme';
 
 const BudgetsScreen: React.FC = () => {
   const {t} = useTranslation();
   const dispatch = useDispatch();
+  const {theme} = useTheme();
 
   const [modalVisible, setModalVisible] = useState(false);
   const [editingBudget, setEditingBudget] = useState<Budget | null>(null);
@@ -55,9 +57,13 @@ const BudgetsScreen: React.FC = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>{t('budgets.title')}</Text>
+    <SafeAreaView style={[styles.container, {backgroundColor: theme.colors.backgroundSecondary}]}>
+      <View
+        style={[
+          styles.header,
+          {backgroundColor: theme.colors.background, borderBottomColor: theme.colors.borderLight},
+        ]}>
+        <Text style={[styles.title, {color: theme.colors.textPrimary}]}>{t('budgets.title')}</Text>
         <Button
           title={t('budgets.addBudget')}
           onPress={handleAddBudget}
@@ -78,7 +84,9 @@ const BudgetsScreen: React.FC = () => {
 
         {/* Budget List */}
         <View style={styles.budgetList}>
-          <Text style={styles.sectionTitle}>{t('budgets.title')}</Text>
+          <Text style={[styles.sectionTitle, {color: theme.colors.textPrimary}]}>
+            {t('budgets.title')}
+          </Text>
           {budgets.length > 0 ? (
             budgets.map(budget => (
               <BudgetItem key={budget.id} budget={budget} onEdit={() => handleEditBudget(budget)} />
@@ -86,10 +94,10 @@ const BudgetsScreen: React.FC = () => {
           ) : (
             <Card>
               <View style={styles.emptyState}>
-                <Text style={styles.emptyText}>
+                <Text style={[styles.emptyText, {color: theme.colors.textSecondary}]}>
                   {t('budgets.noBudgets', 'No budgets created yet')}
                 </Text>
-                <Text style={styles.emptySubtext}>
+                <Text style={[styles.emptySubtext, {color: theme.colors.textSecondary}]}>
                   {t(
                     'budgets.createFirst',
                     'Create your first budget to start tracking your spending',
@@ -115,7 +123,6 @@ const BudgetsScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F2F2F7',
   },
   header: {
     flexDirection: 'row',
@@ -123,14 +130,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 16,
     paddingVertical: 16,
-    backgroundColor: '#FFF',
     borderBottomWidth: 1,
-    borderBottomColor: '#E5E5EA',
   },
   title: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#000',
   },
   addButton: {
     paddingHorizontal: 16,
@@ -141,7 +145,6 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 20,
     fontWeight: '600',
-    color: '#000',
     marginHorizontal: 16,
     marginTop: 24,
     marginBottom: 12,
@@ -156,13 +159,11 @@ const styles = StyleSheet.create({
   emptyText: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#666',
     textAlign: 'center',
     marginBottom: 8,
   },
   emptySubtext: {
     fontSize: 14,
-    color: '#999',
     textAlign: 'center',
     marginBottom: 24,
     paddingHorizontal: 16,
